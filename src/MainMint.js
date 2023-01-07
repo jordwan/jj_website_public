@@ -39,7 +39,7 @@ const MainMint = ({ accounts, setAccounts }) => {
 
   return (
     <Flex justify="center" align="center" height="100vh" paddingBottom="250px">
-      <Box width="520px">
+      <Box width="720px">
         <div>
           <Text fontSize="38px" textShadow="0 5px #000000">
             SquirrelyMonz NFT
@@ -50,7 +50,12 @@ const MainMint = ({ accounts, setAccounts }) => {
             fontFamily="VT323"
             textShadow="0 2px 2px #000000"
           >
-            Squirrels Know Wealth! Mint one now!
+            The SquirrelyMonz are a group of squirrels who nest close to a
+            nuclear plant. They are always happy and energetic, and they love to
+            play and explore their surroundings. What will these evolve into...?
+            <br></br>
+            <br></br>
+            Mint one starting Jan 28th/ 2023
           </Text>
         </div>
         {isConnected ? (

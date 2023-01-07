@@ -33,13 +33,24 @@ const NavBar = ({ accounts, setAccounts }) => {
       <Flex justify="space-around" align="center" width="40%" padding="30px">
         <Box margin="0 15px"> About </Box>
         <Spacer />
-        <Box margin="0 15px"> Mint </Box>
-        <Spacer />
         <Box margin="0 15px"> Team </Box>
+        <Spacer />
+        <Box margin="0 15px"> Mint </Box>
         <Spacer />
 
         {isConnected ? (
-          <Box margin="0 15px">Connected</Box>
+          <Button
+            backgroundColor="#D6517D"
+            borderRadius="5px"
+            boxShadow="0 2px 2px 1px #0F0F0F"
+            color="white"
+            cursor="pointer"
+            fontFamily="inherit"
+            padding="10px 25px"
+            margin="0 15px"
+          >
+            Connected
+          </Button>
         ) : (
           <Button
             backgroundColor="#D6517D"
@@ -48,7 +59,7 @@ const NavBar = ({ accounts, setAccounts }) => {
             color="white"
             cursor="pointer"
             fontFamily="inherit"
-            padding="15px"
+            padding="10px 25px"
             margin="0 15px"
             onClick={connectAccount}
           >
