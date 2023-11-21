@@ -30,10 +30,10 @@ const NavBar = ({ accounts, setAccounts }) => {
         </Link>
       </Flex>
 
-      <Flex justify="space-around" align="center" width="40%" padding="10px">
-        <Box margin="0 25px"> About Me</Box>
+      <Flex justify="space-around" align="center" width="60%" padding="20px">
+        <Box margin="0 15px"> About Me</Box>
         <Spacer />
-        <Box margin="0 25px"> Portfolio </Box>
+        <Box margin="0 15px"> Portfolio </Box>
         <Spacer />
 
         {isConnected ? (

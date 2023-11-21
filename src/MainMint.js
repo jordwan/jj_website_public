@@ -110,16 +110,22 @@ const MainMint = ({ accounts, setAccounts }) => {
             </Button>
           </div>
         ) : (
-          <Text
-            marginTop="0px"
-            fontSize="30px"
-            letterSpacing="-5.5%"
-            fontFamily="VT323"
-            textShadow="0 0px 2px #ffffff"
-            color="#D8A12A"
+          <a
+            href="mailto:info@jordwan.com?subject=Website Inquiry"
+            target="_blank"
+            rel="noreferrer"
           >
-            info@jordwan.com
-          </Text>
+            <Text
+              marginTop="0px"
+              fontSize="30px"
+              letterSpacing="-5.5%"
+              fontFamily="VT323"
+              textShadow="0 0px 2px #ffffff"
+              color="#D8A12A"
+            >
+              info@jordwan.com
+            </Text>
+          </a>
         )}
       </Box>
     </Flex>
