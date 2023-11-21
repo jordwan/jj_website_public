@@ -18,24 +18,22 @@ const NavBar = ({ accounts, setAccounts }) => {
 
   return (
     <Flex justify="space-between" align="center" padding="30px">
-      <Flex justify="space-around" width="40%" padding="0 75px">
+      <Flex justify="space-around" padding="0 75px">
         <Link href="">
-          <Image src={Facebook} boxSize="42px" margin="0 15px" />
+          <Image src={Facebook} boxSize="42px" margin="0 5px" />
         </Link>
         <Link href="">
-          <Image src={Twitter} boxSize="42px" margin="0 15px" />
+          <Image src={Twitter} boxSize="42px" margin="0 5px" />
         </Link>
         <Link href="">
-          <Image src={Email} boxSize="42px" margin="0 15px" />
+          <Image src={Email} boxSize="42px" margin="0 5px" />
         </Link>
       </Flex>
 
-      <Flex justify="space-around" align="center" width="40%" padding="30px">
-        <Box margin="0 15px"> About </Box>
+      <Flex justify="space-around" align="center" width="40%" padding="10px">
+        <Box margin="0 25px"> About Me</Box>
         <Spacer />
-        <Box margin="0 15px"> Team </Box>
-        <Spacer />
-        <Box margin="0 15px"> Mint </Box>
+        <Box margin="0 25px"> Portfolio </Box>
         <Spacer />
 
         {isConnected ? (
@@ -53,7 +51,7 @@ const NavBar = ({ accounts, setAccounts }) => {
           </Button>
         ) : (
           <Button
-            backgroundColor="#D6517D"
+            backgroundColor="#476930"
             borderRadius="5px"
             boxShadow="0 2px 2px 1px #0F0F0F"
             color="white"

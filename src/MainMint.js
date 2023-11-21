@@ -41,21 +41,17 @@ const MainMint = ({ accounts, setAccounts }) => {
     <Flex justify="center" align="center" height="100vh" paddingBottom="250px">
       <Box width="720px">
         <div>
-          <Text fontSize="38px" textShadow="0 5px #000000">
-            SquirrelyMonz NFT
+          <Text fontSize="2em" textShadow="0 0px 2px #ffffff" color="#FF5733">
+            Jordwan.com
           </Text>
           <Text
-            fontSize="30px"
+            fontSize="40px"
+            color="#096066"
             letterSpacing="-5.5%"
             fontFamily="VT323"
-            textShadow="0 2px 2px #000000"
+            textShadow="0 0px 2px #ffffff"
           >
-            The SquirrelyMonz are a group of squirrels who nest close to a
-            nuclear plant. They are always happy and energetic, and they love to
-            play and explore their surroundings. What will these evolve into...?
-            <br></br>
-            <br></br>
-            Mint one starting Jan 28th/ 2023
+            Web Development / Blockchain
           </Text>
         </div>
         {isConnected ? (
@@ -115,14 +111,14 @@ const MainMint = ({ accounts, setAccounts }) => {
           </div>
         ) : (
           <Text
-            marginTop="70px"
+            marginTop="0px"
             fontSize="30px"
             letterSpacing="-5.5%"
             fontFamily="VT323"
-            textShadow="0 3px #000000"
-            color="#D6517D"
+            textShadow="0 0px 2px #ffffff"
+            color="#D8A12A"
           >
-            You must be connected to mint.
+            info@jordwan.com
           </Text>
         )}
       </Box>
