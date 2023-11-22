@@ -1,8 +1,5 @@
 import React from "react";
 import { Box, Button, Flex, Image, Link, Spacer } from "@chakra-ui/react";
-import Facebook from "./assets/social-media-icons/facebook_32x32.png";
-import Twitter from "./assets/social-media-icons/twitter_32x32.png";
-import Email from "./assets/social-media-icons/email_32x32.png";
 
 const NavBar = ({ accounts, setAccounts }) => {
   const isConnected = Boolean(accounts[0]);
@@ -17,24 +14,25 @@ const NavBar = ({ accounts, setAccounts }) => {
   }
 
   return (
-    <Flex justify="space-between" align="center" padding="30px">
-      <Flex justify="space-around" padding="0 75px">
-        <Link href="">
-          <Image src={Facebook} boxSize="42px" margin="0 5px" />
-        </Link>
-        <Link href="">
-          <Image src={Twitter} boxSize="42px" margin="0 5px" />
-        </Link>
-        <Link href="">
-          <Image src={Email} boxSize="42px" margin="0 5px" />
-        </Link>
-      </Flex>
-
-      <Flex justify="space-around" align="center" width="60%" padding="20px">
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center",
+        padding: "10px",
+      }}
+    >
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "flex-end",
+          alignItems: "center",
+          width: "100%",
+          paddingRight: "10px",
+        }}
+      >
         <Box margin="0 15px"> About Me</Box>
-        <Spacer />
         <Box margin="0 15px"> Portfolio </Box>
-        <Spacer />
 
         {isConnected ? (
           <Button
@@ -64,8 +62,8 @@ const NavBar = ({ accounts, setAccounts }) => {
             Connect
           </Button>
         )}
-      </Flex>
-    </Flex>
+      </div>
+    </div>
   );
 };
 

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { ethers, BigNumber } from "ethers";
 import squirrelyMonzNFT from "./SquirrelyMonzNFT.json";
-import { Box, Button, Flex, Input, Text } from "@chakra-ui/react";
+import { Box, Button, Flex, Input, Text, Link, Image } from "@chakra-ui/react";
 const squirrelyMonzNFTAddress = "0xa3E46535052Ec3677dB3867b65B4b33889D4733B";
 
 const MainMint = ({ accounts, setAccounts }) => {
@@ -106,7 +106,7 @@ const MainMint = ({ accounts, setAccounts }) => {
               marginTop="10px"
               onClick={handleMint}
             >
-              Mint Now
+              Mint Business Card
             </Button>
           </div>
         ) : (
@@ -133,3 +133,26 @@ const MainMint = ({ accounts, setAccounts }) => {
 };
 
 export default MainMint;
+
+/*  <Link href="/">
+<Image
+src="./assets/social-media-icons/facebook_32x32.png"
+boxSize="42px"
+margin="0 5px"
+/>
+</Link>
+<Link href="/">
+<Image
+src="./assets/social-media-icons/facebook_32x32.png"
+boxSize="42px"
+margin="0 5px"
+/>
+</Link>
+<Link href="/">
+<Image
+src="./assets/social-media-icons/facebook_32x32.png"
+boxSize="42px"
+margin="0 5px"
+/>
+</Link>
+*/
