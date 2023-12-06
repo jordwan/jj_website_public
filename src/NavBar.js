@@ -27,7 +27,9 @@ const NavBar = ({ accounts, setAccounts }) => {
       }}
     >
       <div style={{ display: "flex", alignItems: "center" }}>
-        <Box margin="0 15px">About Me</Box>
+        <Box margin="0 15px">
+          <Link href="/">About Me </Link>
+        </Box>
         <Box margin="0 15px">Portfolio</Box>
       </div>
 
