@@ -1,4 +1,5 @@
 import React from "react";
+import Link from "react";
 import { Box, Button } from "@chakra-ui/react";
 
 const NavBar = ({ accounts, setAccounts }) => {
