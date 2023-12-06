@@ -1,5 +1,4 @@
 import React from "react";
-import Link from "react";
 import { Box, Button } from "@chakra-ui/react";
 
 const NavBar = ({ accounts, setAccounts }) => {
@@ -29,9 +28,11 @@ const NavBar = ({ accounts, setAccounts }) => {
     >
       <div style={{ display: "flex", alignItems: "center" }}>
         <Box margin="0 15px">
-          <Link href="/">About Me </Link>
+          <a href="/">About Me</a>
         </Box>
-        <Box margin="0 15px">Portfolio</Box>
+        <Box margin="0 15px">
+          <a href="http://footyfiend.com/">Portfolio</a>
+        </Box>
       </div>
 
       <div>
