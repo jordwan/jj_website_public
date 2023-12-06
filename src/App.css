@@ -38,3 +38,10 @@ body {
   background-attachment: fixed;
   background-position: 40% 40%;
 }
+
+/* CSS File */
+/* For screens smaller than or equal to 768px (mobile devices) */
+@media (max-width: 768px) {
+  /* Add hamburger menu styles */
+  /* You can hide or show the hamburger menu icon and handle its functionality */
+}

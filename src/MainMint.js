@@ -106,7 +106,7 @@ const MainMint = ({ accounts, setAccounts }) => {
               marginTop="10px"
               onClick={handleMint}
             >
-              Mint Business Card
+              Mint Function
             </Button>
           </div>
         ) : (
