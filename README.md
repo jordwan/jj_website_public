@@ -27,20 +27,30 @@ npm run preview  # preview the production build
 
 Level 2 shows faint traces left by earlier visitors (signature outlines, a
 40-character note, and the tip hash of their chain) and lets you anchor yours.
-That needs a tiny backend: `api/remnants.js`, a Vercel serverless function
-backed by Upstash Redis.
+The client talks to `/api/remnants`.
 
-To enable it:
+### Netlify (production)
 
-1. Deploy the repo to Vercel (framework preset: Vite). The `api/` folder is
-   picked up automatically.
-2. In the Vercel project, add the **Upstash Redis** integration from the
-   Marketplace (free tier is plenty). It sets `UPSTASH_REDIS_REST_URL` and
-   `UPSTASH_REDIS_REST_TOKEN` for you. Legacy `KV_REST_API_*` names also work.
-3. Redeploy.
+`netlify.toml` builds with Vite, publishes `dist/`, routes `/api/remnants` to
+`netlify/functions/remnants.mjs`, and rewrites all other paths to
+`index.html` for the client-side routes. The function stores remnants in
+**Netlify Blobs**, which is built into every Netlify site, so there is nothing
+to provision: push to the production branch and it works. Check it with:
 
-Without the backend the site still works: the client falls back to a local
+```shell
+curl https://<your-site>/api/remnants
+```
+
+### Vercel (alternative)
+
+`api/remnants.js` is the same API as a Vercel function backed by Upstash
+Redis (`UPSTASH_REDIS_REST_URL` / `UPSTASH_REDIS_REST_TOKEN`, or the legacy
+`KV_REST_API_*` names). `vercel.json` provides the SPA rewrite.
+
+### Behaviour and limits
+
+Without a backend the site still works: the client falls back to a local
 echo of your own anchors and labels it as such. The API keeps the last 500
 remnants, strips control characters, caps note and signature size, and
 rate-limits anchoring to 6 per IP per hour. IPs are used only for the rate
-limit and are not stored.
+limit and are not stored. Shared logic lives in `api/_lib/remnants-core.js`.
