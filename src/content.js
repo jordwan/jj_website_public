@@ -35,7 +35,7 @@ export const projects = [
     status: "live",
     tags: ["Next.js", "Supabase", "community", "video"],
     blurb:
-      "The Future of Snowboarding. A community feed where riders post and rank snowboard and skate clips: category filters from street to backcountry, a weekly top-rider leaderboard, Clip of the Week, user profiles and hundreds of clips. Next.js front end on Supabase auth, database and storage.",
+      "The Future of Snowboarding. A living archive and launchpad for snowboard and skate footage: riders drop clips, the community ranks them, and the leaderboard decides who owns the week. Fifteen years deep and still the first tab the culture opens.",
   },
   {
     title: "Jordwan.com",
@@ -43,14 +43,14 @@ export const projects = [
     status: "live",
     tags: ["React", "Vite", "SHA-256", "serverless"],
     blurb:
-      "This site. A quiet landing page with a two-level, twenty-block blockchain hidden behind the title: real hashes, proof of work you hold to mine, a Merkle tree you fold by hand, and traces left by every visitor who anchored before you.",
+      "Looks like a title and an email. Underneath, a working blockchain you mine with your hands, a Merkle tree you fold yourself, and a visitor chain that remembers everyone who finished. The site is the portfolio piece.",
   },
   {
     title: "Ledger Lens",
     status: "concept",
     tags: ["React", "d3", "JSON-RPC"],
     blurb:
-      "A block explorer that treats a chain like a timeline instead of a table. Scrub through blocks, watch the mempool drain, and follow a single address as a thread through the whole thing.",
+      "A block explorer rebuilt as a timeline. Scrub through history, watch the mempool breathe, and pull a single address as a thread through the entire chain.",
   },
   {
     title: "8a340a…0b81",
@@ -68,21 +68,21 @@ export const projects = [
     status: "live",
     tags: ["React", "brand", "storefront"],
     blurb:
-      "Product of the Streetz. Brand site for a streetwear label, with product and contact pages on a React front end, built lean so it can grow into a full storefront.",
+      "Product of the Streetz. A streetwear label's digital storefront, cut to the essentials and built for the drop: fast, dark, mobile-first, and ready to scale from the first release to a full catalogue.",
   },
   {
     title: "Okanagan Pulse",
     status: "concept",
     tags: ["Next.js", "maps", "open data"],
     blurb:
-      "Live snapshot of the valley: lake temperature, trail conditions, wildfire smoke and ferry waits on one screen, pulled from public feeds and designed to be glanced at, not studied.",
+      "The valley on one screen. Lake temperature, trail conditions, smoke and ferry waits pulled live from public feeds and composed to be glanced at, not studied.",
   },
   {
     title: "Mint Kit",
     status: "concept",
     tags: ["TypeScript", "wagmi", "components"],
     blurb:
-      "Drop-in React components for mint pages: wallet connect, supply meter, quantity picker and transaction toasts, all themeable and all boring in the ways that matter.",
+      "The unglamorous half of every mint, solved once. Wallet connect, supply meters, quantity pickers and transaction toasts as drop-in components, themeable to anything and boring in exactly the ways that matter.",
   },
   {
     title: "0c4d17…fb6e",
@@ -99,7 +99,7 @@ export const projects = [
     status: "concept",
     tags: ["Canvas", "weather API", "pixel art"],
     blurb:
-      "A weather widget rendered as a tiny animated pixel city. Rain, snow, neon, fog. The scene changes with the forecast and nobody needs to read a number.",
+      "A weather app with no numbers. A tiny animated pixel city that rains, snows, fogs and glows with the forecast. You just look out the window.",
   },
   {
     title: "SquirrelyMonz",
@@ -107,6 +107,6 @@ export const projects = [
     status: "archived",
     tags: ["Solidity", "ERC-721", "Hardhat", "ethers", "MetaMask"],
     blurb:
-      "An NFT collection and its mint site. OpenZeppelin-based ERC-721 contract with per-wallet limits and reentrancy guards, deployed to a testnet, with a React front end that talked to MetaMask.",
+      "An NFT collection with its own on-chain mint. Hardened ERC-721 contract, per-wallet limits, reentrancy guards, and a React mint site wired straight into MetaMask.",
   },
 ];
