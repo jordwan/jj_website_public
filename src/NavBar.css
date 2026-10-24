@@ -5,6 +5,7 @@
   padding: 16px 24px;
   position: relative;
   z-index: 20;
+  gap: 16px;
 }
 
 .nav-links {
@@ -12,7 +13,8 @@
   gap: 24px;
 }
 
-.nav-links a {
+.nav-links a,
+.nav-email a {
   color: white;
   text-decoration: none;
   font-family: "VT323", monospace;
@@ -20,9 +22,43 @@
   letter-spacing: 0.05em;
   text-shadow: 0 0 4px rgba(255, 255, 255, 0.6);
   transition: color 0.2s;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-user-select: none;
+  user-select: none;
 }
 
-.nav-links a:hover {
-  color: #D8A12A;
+.nav-links a:hover,
+.nav-email a:hover,
+.nav-links a.active {
+  color: #d8a12a;
 }
 
+.nav-email {
+  position: relative;
+  text-align: right;
+}
+
+.nav-hint {
+  position: absolute;
+  right: 0;
+  top: 100%;
+  white-space: nowrap;
+  font-family: "VT323", monospace;
+  font-size: 1rem;
+  color: #d8a12a;
+  opacity: 0;
+  transition: opacity 0.25s;
+  pointer-events: none;
+}
+.nav-hint.show { opacity: 0.9; }
+
+@media (max-width: 768px) {
+  .navbar { padding: 14px 16px 10px; flex-wrap: wrap; row-gap: 4px; }
+  .nav-links { gap: 18px; }
+  .nav-links a,
+  .nav-email a { font-size: 1.2rem; }
+  /* email drops to its own right-aligned line so nothing is cramped */
+  .nav-email { flex-basis: 100%; }
+  .nav-email a { font-size: 1.05rem; opacity: 0.85; }
+  .nav-hint { font-size: 0.95rem; }
+}

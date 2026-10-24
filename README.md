@@ -1,6 +1,11 @@
 # Jordwan.com
 
-Personal site: animated background, title, nav bar. Built with React + Vite.
+Personal site: animated background, title, nav bar, About Me and Portfolio
+pages. Built with React + Vite. Routes are client-side (`src/router.jsx`);
+`vercel.json` rewrites deep links to `index.html`.
+
+Page copy for About and Portfolio lives in `src/content.js`. Portfolio items
+marked `status: "concept"` are placeholders to replace with real work.
 
 ```shell
 npm install
