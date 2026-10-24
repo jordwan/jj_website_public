@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import { loadRemnants, timeAgo } from "../easter/remnants";
 import { short } from "../easter/hash";
 import { TOTAL } from "../easter/ChainExperience";
-import { Link } from "../router";
+import { Link, useRoute } from "../router";
 import "./Pages.css";
 
 /* The ending: every visitor who finished the chain and anchored, as a
@@ -11,6 +11,22 @@ export default function Archive({ chain }) {
   const [state, setState] = useState({ remnants: [], count: 0, online: false, loaded: false });
   const complete = chain.blocks.length >= TOTAL;
   const myTip = useMemo(() => chain.blocks[TOTAL - 2]?.hash, [chain.blocks]);
+  const { navigate } = useRoute();
+  const [confirm, setConfirm] = useState(false);
+  useEffect(() => {
+    if (!confirm) return;
+    const t = setTimeout(() => setConfirm(false), 3000);
+    return () => clearTimeout(t);
+  }, [confirm]);
+  const restart = () => {
+    if (!confirm) {
+      setConfirm(true);
+      return;
+    }
+    chain.reset();
+    chain.setOpen(true);
+    navigate("/");
+  };
 
   useEffect(() => {
     let live = true;
@@ -48,7 +64,12 @@ export default function Archive({ chain }) {
             the archive · {state.loaded ? `${state.count} visitor${state.count === 1 ? "" : "s"} anchored` : "loading…"}
             {state.loaded && !state.online ? " · local echo" : ""}
           </p>
-          <h1 className="page-title">Artifacts</h1>
+          <div className="page-title-row">
+            <h1 className="page-title">Artifacts</h1>
+            <button className={`eg-x page-restart ${confirm ? "warn" : ""}`} onClick={restart}>
+              {confirm ? "sure? tap again" : "restart"}
+            </button>
+          </div>
           <p className="page-tagline">what the people before you left behind.</p>
         </header>
 

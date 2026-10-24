@@ -184,3 +184,21 @@ a.card:hover {
 .artifact-tip { font-size: 0.95rem; opacity: 0.45; letter-spacing: 0.06em; margin-top: auto; }
 .archive-hint { margin: 8px 0 0; font-size: 1rem; opacity: 0.6; }
 .archive-hint a { color: #d8a12a; text-decoration: none; }
+
+.page-title-row { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; }
+.page-title-row .page-title { margin-bottom: 10px; }
+.page-restart {
+  font-family: "VT323", monospace;
+  font-size: 1rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  background: none;
+  border: none;
+  color: inherit;
+  opacity: 0.6;
+  cursor: pointer;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+.page-restart:hover { opacity: 1; }
+.page-restart.warn { color: #ff5c6c; opacity: 1; }
