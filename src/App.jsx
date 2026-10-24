@@ -14,7 +14,7 @@ function App() {
         <NavBar />
         <main className="hero">
           <p className="hero-title">Jordwan.com</p>
-          <p className="hero-sub">Web Development / Blockchain</p>
+          <p className="hero-sub">Blockchain</p>
         </main>
       </div>
     </div>
