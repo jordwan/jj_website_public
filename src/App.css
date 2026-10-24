@@ -85,3 +85,18 @@ body {
   transition: opacity 0.25s;
 }
 .hero-hint.show { opacity: 0.85; height: auto; }
+
+/* no blue flash or text selection on the tappable bits (iOS/Android) */
+.hero-title,
+.hero-sub,
+.hero-hint,
+.eg,
+.term {
+  -webkit-tap-highlight-color: transparent;
+}
+.hero-title,
+.hero-sub {
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+}

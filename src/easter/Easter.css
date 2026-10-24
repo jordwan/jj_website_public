@@ -319,7 +319,7 @@
 }
 
 @media (max-width: 768px) {
-  .eg { font-size: 1.05rem; padding: 12px; }
+  .eg { font-size: 1.05rem; padding: 12px; background: rgba(0, 0, 0, 0.5); border-color: rgba(255, 255, 255, 0.28); }
   .eg-forks { flex-direction: column; }
 }
 
