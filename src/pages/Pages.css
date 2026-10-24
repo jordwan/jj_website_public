@@ -62,7 +62,7 @@
 
 .stack {
   display: grid;
-  grid-template-columns: 9ch 1fr;
+  grid-template-columns: 11ch 1fr;
   gap: 6px 16px;
   margin: 0;
 }
