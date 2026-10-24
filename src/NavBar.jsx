@@ -8,7 +8,6 @@ const NavBar = () => {
         <a href="/">About Me</a>
         <a href="/">Portfolio</a>
       </div>
-      <button className="connect-btn">Connect</button>
     </nav>
   );
 };
