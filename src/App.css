@@ -45,9 +45,6 @@ body {
   align-items: center;
   height: calc(100% - 70px);
   padding: 0 16px 32px;
-}
-@media (max-width: 768px) {
-  .hero, .page { height: calc(100% - 92px); }
   overflow-y: auto;
 }
 

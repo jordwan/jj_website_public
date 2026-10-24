@@ -2,15 +2,17 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 16px 24px;
+  gap: 16px;
+  height: 70px;
+  padding: 0 24px;
   position: relative;
   z-index: 20;
-  gap: 16px;
 }
 
 .nav-links {
   display: flex;
   gap: 24px;
+  white-space: nowrap;
 }
 
 .nav-links a,
@@ -36,6 +38,7 @@
 .nav-email {
   position: relative;
   text-align: right;
+  white-space: nowrap;
 }
 
 .nav-hint {
@@ -52,13 +55,19 @@
 }
 .nav-hint.show { opacity: 0.9; }
 
-@media (max-width: 768px) {
-  .navbar { padding: 14px 16px 10px; flex-wrap: wrap; row-gap: 4px; }
+/* tablets and narrow windows: same row, a touch tighter */
+@media (max-width: 900px) {
+  .navbar { padding: 0 18px; }
   .nav-links { gap: 18px; }
   .nav-links a,
-  .nav-email a { font-size: 1.2rem; }
-  /* email drops to its own right-aligned line so nothing is cramped */
-  .nav-email { flex-basis: 100%; }
-  .nav-email a { font-size: 1.05rem; opacity: 0.85; }
-  .nav-hint { font-size: 0.95rem; }
+  .nav-email a { font-size: 1.25rem; }
+}
+
+/* phones: still one row, smaller type */
+@media (max-width: 520px) {
+  .navbar { padding: 0 14px; gap: 10px; }
+  .nav-links { gap: 14px; }
+  .nav-links a { font-size: 1.1rem; letter-spacing: 0.03em; }
+  .nav-email a { font-size: 1rem; letter-spacing: 0.02em; opacity: 0.9; }
+  .nav-hint { font-size: 0.9rem; }
 }
