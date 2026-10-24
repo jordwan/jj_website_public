@@ -1,0 +1,44 @@
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 24px;
+  position: relative;
+  z-index: 20;
+}
+
+.nav-links {
+  display: flex;
+  gap: 24px;
+}
+
+.nav-links a {
+  color: white;
+  text-decoration: none;
+  font-family: "VT323", monospace;
+  font-size: 1.4rem;
+  letter-spacing: 0.05em;
+  text-shadow: 0 0 4px rgba(255, 255, 255, 0.6);
+  transition: color 0.2s;
+}
+
+.nav-links a:hover {
+  color: #D8A12A;
+}
+
+.connect-btn {
+  background-color: #476930;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 24px;
+  font-family: "Press Start 2P", monospace;
+  font-size: 0.6rem;
+  cursor: pointer;
+  box-shadow: 0 2px 2px 1px #0F0F0F;
+  transition: background-color 0.2s;
+}
+
+.connect-btn:hover {
+  background-color: #5a8a3a;
+}
