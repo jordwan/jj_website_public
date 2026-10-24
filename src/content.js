@@ -8,7 +8,7 @@ export const about = {
   intro: [
     "I build software across the whole stack: the interfaces people touch, the services that keep them honest, and the ledgers underneath that make the result verifiable.",
     "Most of the work lives at the edges, where distributed systems, cryptographic protocols and real-time data meet a screen someone actually has to use. Ethereum and the XRP Ledger are home turf. The rest of the toolkit changes with the problem.",
-    "Based in the Okanagan. Available for the interesting ones.",
+    "Based in the Okanagan. Maybe available for the interesting ones.",
   ],
   stack: [
     { group: "interfaces", items: ["React", "TypeScript", "motion", "design systems"] },
