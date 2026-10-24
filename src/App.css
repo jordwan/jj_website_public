@@ -74,3 +74,14 @@ body {
     font-size: 1.3rem;
   }
 }
+
+.hero-hint {
+  font-family: "VT323", monospace;
+  font-size: 1.1rem;
+  color: #d8a12a;
+  opacity: 0;
+  height: 0;
+  margin-top: 6px;
+  transition: opacity 0.25s;
+}
+.hero-hint.show { opacity: 0.85; height: auto; }
