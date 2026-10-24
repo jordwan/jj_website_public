@@ -3,7 +3,7 @@
 export const about = {
   name: "Jordan",
   handle: "jordwan",
-  location: "Kelowna, BC",
+  location: "South Okanagan, BC",
   tagline: "systems · ledgers · interfaces",
   intro: [
     "I build software across the whole stack: the interfaces people touch, the services that keep them honest, and the ledgers underneath that make the result verifiable.",

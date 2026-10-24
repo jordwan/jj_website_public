@@ -103,7 +103,7 @@ function Keypair({ onCommit }) {
 }
 
 /* 3 ── cipher: turn the key until the ciphertext resolves */
-const PLAIN = "kelowna, bc";
+const PLAIN = "south okanagan, bc";
 function Cipher({ onCommit }) {
   const key = useMemo(() => 1 + ((Math.random() * 62) | 0), []);
   const bytes = useMemo(() => [...PLAIN].map((c) => c.charCodeAt(0) ^ key), [key]);

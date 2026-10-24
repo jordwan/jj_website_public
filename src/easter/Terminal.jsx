@@ -44,7 +44,7 @@ export default function Terminal({ chain }) {
         print(HELP);
         break;
       case "whoami":
-        print("jordwan · kelowna, bc · web development / blockchain");
+        print("jordwan · south okanagan, bc · web development / blockchain");
         break;
       case "chain": {
         const n = chain.blocks.length;
