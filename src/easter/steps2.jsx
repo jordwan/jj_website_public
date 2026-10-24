@@ -368,7 +368,7 @@ function Trace({ onCommit }) {
   const submit = (text = v) => onCommit("trace", (typeof text === "string" ? text : v).trim() || "silence");
   return (
     <div className="eg-col">
-      <TextEntry value={v} onChange={setV} onSubmit={submit} autoFocus maxLength={NOTE_MAX} placeholder={`up to ${NOTE_MAX} characters`} />
+      <TextEntry value={v} onChange={setV} onSubmit={submit} autoFocus maxLength={NOTE_MAX} placeholder={`a note, up to ${NOTE_MAX} characters`} />
       <div className="eg-meta">
         <span>this will be visible to future visitors.</span>
         <button className="eg-link-btn" onClick={() => onCommit("trace", "silence")}>

@@ -1,16 +1,16 @@
 import React, { useEffect, useRef, useState } from "react";
-import { recognizeWord } from "./recognizer";
+import { sha256, randomHex } from "./hash";
 import { svgPoint } from "./svg";
-
-const WORD_PAUSE = 1500; // ms after the pen lifts before the word is read
 
 export const isTouch = () =>
   typeof window !== "undefined" && window.matchMedia("(pointer: coarse)").matches;
 
+const INK_PAUSE = 1500; // ms after the pen lifts before the ink is hashed
+const HASH_LEN = 16;
+
 /* Desktop: a keyboard field with an "ent" button.
-   Touch: a glyph pad. Write one block capital at a time; it becomes text.
-   Candidates let you fix a miss; space / ⌫ / ent are buttons; "abc" falls
-   back to the normal keyboard. */
+   Touch: an ink pad. Draw anything; after a pause the ink becomes a hash,
+   and that hash is the input. ⌨ switches to the real keyboard. */
 export default function TextEntry({ value, onChange, onSubmit, placeholder, maxLength = 64, autoFocus }) {
   const touch = isTouch();
   const [mode, setMode] = useState(() => (touch ? "pad" : "keys"));
@@ -53,7 +53,7 @@ export default function TextEntry({ value, onChange, onSubmit, placeholder, maxL
         )}
       </form>
       {mode === "pad" && (
-        <GlyphPad
+        <InkPad
           value={value}
           onChange={(v) => onChange(v.slice(0, maxLength))}
           onSubmit={onSubmit ? submit : undefined}
@@ -65,18 +65,15 @@ export default function TextEntry({ value, onChange, onSubmit, placeholder, maxL
   );
 }
 
-function GlyphPad({ value, onChange, onSubmit, placeholder, onKeyboard }) {
+function InkPad({ value, onChange, onSubmit, placeholder, onKeyboard }) {
   const [strokes, setStrokes] = useState([]);
-  const [cands, setCands] = useState([]);
-  const [flash, setFlash] = useState(false);
   const [pending, setPending] = useState(false);
+  const [display, setDisplay] = useState(value);
   const drawing = useRef(false);
   const box = useRef(null);
   const timer = useRef(null);
   const strokesRef = useRef(strokes);
-  const valueRef = useRef(value);
   strokesRef.current = strokes;
-  valueRef.current = value;
 
   const pos = (e) => svgPoint(box.current, e);
   const down = (e) => {
@@ -98,105 +95,90 @@ function GlyphPad({ value, onChange, onSubmit, placeholder, onKeyboard }) {
     if (!drawing.current) return;
     drawing.current = false;
     clearTimeout(timer.current);
-    setPending(true); // keep drawing: the word is read after a pause
-    timer.current = setTimeout(finish, WORD_PAUSE);
+    setPending(true);
+    timer.current = setTimeout(hashInk, INK_PAUSE);
   };
 
-  /* read everything drawn so far as one word */
-  const finish = () => {
+  /* all ink on the pad → one hash */
+  const inkHash = async () => {
     const s = strokesRef.current;
+    if (!s.length) return "";
+    const data = s.map((st) => st.map((p) => `${p.x | 0},${p.y | 0}`).join(";")).join("|");
+    return (await sha256(data)).slice(0, HASH_LEN);
+  };
+  const hashInk = async () => {
     setPending(false);
-    if (!s.length) return;
-    const { text, last } = recognizeWord(s);
-    if (text) onChange(valueRef.current + text);
-    setCands(last);
-    setFlash(true);
-    setTimeout(() => {
-      setStrokes([]);
-      setFlash(false);
-    }, 180);
+    const h = await inkHash();
+    if (!h) return;
+    for (let i = 0; i <= HASH_LEN; i += 2) {
+      setDisplay(h.slice(0, i) + randomHex(HASH_LEN - i));
+      await new Promise((r) => setTimeout(r, 30));
+    }
+    setDisplay(h);
+    onChange(h);
   };
 
-  /* space / ent while ink is still on the pad: read it first */
-  const flushThen = (fn) => {
+  /* ent while ink is still pending: hash it first */
+  const submitNow = async () => {
     clearTimeout(timer.current);
-    if (strokesRef.current.length) {
-      const { text, last } = recognizeWord(strokesRef.current);
-      const next = valueRef.current + text;
-      setStrokes([]);
-      setPending(false);
-      setCands(last);
-      fn(next);
-    } else fn(valueRef.current);
+    setPending(false);
+    const h = strokesRef.current.length ? await inkHash() : value;
+    if (!h) return;
+    onChange(h);
+    setTimeout(() => onSubmit(h), 0);
+  };
+  const clear = () => {
+    clearTimeout(timer.current);
+    setPending(false);
+    setStrokes([]);
+    setDisplay("");
+    onChange("");
   };
 
   useEffect(() => () => clearTimeout(timer.current), []);
-
-  const pick = (c) => {
-    onChange(value.slice(0, -1) + c);
-    setCands([]);
-  };
 
   const path = (s) => s.map((p, i) => `${i ? "L" : "M"}${p.x.toFixed(1)} ${p.y.toFixed(1)}`).join(" ");
 
   return (
     <div className="te te-pad">
       <div className="te-out">
-        {value ? <span>{value}</span> : <span className="ph">{placeholder}</span>}
+        {display ? <span className="te-hash">{display}</span> : <span className="ph">{placeholder}</span>}
         <span className="te-caret">_</span>
       </div>
       <svg
         ref={box}
-        className={`eg-pad te-canvas ${flash ? "flash" : ""}`}
+        className={`eg-pad te-canvas ${pending ? "pending" : ""}`}
         viewBox="0 0 300 120"
         onPointerDown={down}
         onPointerMove={move}
         onPointerUp={up}
         onPointerCancel={up}
       >
-        <line className="guide" x1="0" y1="60" x2="300" y2="60" />
         {strokes.map((s, i) => (
           <path key={i} d={path(s)} />
         ))}
         {!strokes.length && !value && (
           <text x="150" y="112" className="te-tip">
-            write a word in capitals · tap for . · pause to convert
+            draw anything · your ink becomes a hash
           </text>
         )}
       </svg>
       <div className="te-wait">
-        <div className={`fill ${pending ? "run" : ""}`} style={{ transitionDuration: `${WORD_PAUSE}ms` }} />
+        <div className={`fill ${pending ? "run" : ""}`} style={{ transitionDuration: `${INK_PAUSE}ms` }} />
       </div>
       <div className="te-row">
-        <div className="te-cands">
-          {cands.slice(1).map((c) => (
-            <button key={c.char} type="button" onClick={() => pick(c.char)} title="replace last letter">
-              {c.char}
-            </button>
-          ))}
+        <div className="eg-meta">
+          <span>{pending ? "hashing…" : strokes.length ? "keep drawing or press ent" : ""}</span>
         </div>
         <div className="te-keys">
-          <button type="button" onClick={() => flushThen((v) => onChange(v + " "))}>
-            space
-          </button>
           <button type="button" className="te-mode te-kbd" onClick={onKeyboard} title="use the keyboard" aria-label="use the keyboard">
             ⌨
           </button>
-          <button type="button" onClick={() => onChange(value.slice(0, -1))}>
+          <button type="button" onClick={clear} title="clear">
             ⌫
           </button>
           {onSubmit && (
-            <button
-              type="button"
-              className="te-ent"
-              onClick={() =>
-                flushThen((v) => {
-                  onChange(v);
-                  setTimeout(() => onSubmit(v), 0);
-                })
-              }
-              disabled={!value.trim() && !strokes.length}
-            >
+            <button type="button" className="te-ent" onClick={submitNow} disabled={!value && !strokes.length}>
               ent
             </button>
           )}

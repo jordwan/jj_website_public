@@ -2,6 +2,14 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 import { hashBlock, randomHex, sha256, short } from "./hash";
 import TextEntry from "./TextEntry";
 import { svgPoint } from "./svg";
+import questionsRaw from "./questions.txt?raw";
+
+const QUESTIONS = questionsRaw.split("\n").map((q) => q.trim()).filter(Boolean);
+const pickQuestions = (n) => {
+  const out = new Set();
+  while (out.size < n && out.size < QUESTIONS.length) out.add(QUESTIONS[(Math.random() * QUESTIONS.length) | 0]);
+  return [...out];
+};
 
 /* 1 ── genesis: a single tap */
 function Genesis({ onCommit }) {
@@ -145,7 +153,7 @@ function Message({ onCommit }) {
   const submit = (text = v) => text.trim() && onCommit("message", text.trim());
   return (
     <div className="eg-col">
-      <TextEntry value={v} onChange={setV} onSubmit={submit} autoFocus maxLength={64} placeholder="type something, press enter" />
+      <TextEntry value={v} onChange={setV} onSubmit={submit} autoFocus maxLength={64} placeholder="type or draw something" />
     </div>
   );
 }
@@ -361,11 +369,13 @@ function Oracle({ prevHash, onCommit }) {
   const [asked, setAsked] = useState("");
   const [shown, setShown] = useState("");
   const [full, setFull] = useState("");
+  const [options, setOptions] = useState(() => pickQuestions(4));
 
   const ask = async (text = q) => {
-    if (!text.trim()) return;
-    const h = await sha256(text.trim() + prevHash);
-    setAsked(text.trim());
+    const t = (typeof text === "string" ? text : q).trim();
+    if (!t) return;
+    const h = await sha256(t + prevHash);
+    setAsked(t);
     setFull(ANSWERS[parseInt(h.slice(0, 2), 16) % ANSWERS.length]);
   };
 
@@ -384,7 +394,22 @@ function Oracle({ prevHash, onCommit }) {
   return (
     <div className="eg-col">
       {!asked ? (
-        <TextEntry value={q} onChange={setQ} onSubmit={ask} autoFocus maxLength={80} placeholder="ask the chain a yes / no question" />
+        <>
+          <div className="eg-options">
+            {options.map((o) => (
+              <button key={o} type="button" onClick={() => ask(o)}>
+                {o}
+              </button>
+            ))}
+          </div>
+          <div className="eg-or">
+            <span>or ask your own</span>
+            <button className="eg-link-btn" type="button" onClick={() => setOptions(pickQuestions(4))}>
+              other questions ↻
+            </button>
+          </div>
+          <TextEntry value={q} onChange={setQ} onSubmit={ask} maxLength={80} placeholder="a yes / no question" />
+        </>
       ) : (
         <>
           <div className="eg-meta">

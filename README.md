@@ -22,6 +22,10 @@ npm run preview  # preview the production build
   blockchain. Every block is a real SHA-256 hash linked to the one before it.
   Progress is saved in the browser.
 - Press the backtick key for a small command line (`help` lists commands).
+- On touch devices the text steps show an ink pad: whatever you draw is
+  hashed and the hash becomes your input. The ⌨ button switches to the
+  normal keyboard. The oracle step offers four questions drawn from the 900
+  in `src/easter/questions.txt`, or you can ask your own.
 
 ## Remnants API (shared traces between visitors)
 
