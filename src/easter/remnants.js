@@ -34,18 +34,40 @@ export async function loadRemnants() {
   }
 }
 
-/* Downsample a "x,y;x,y;…" stroke to at most SIG_MAX integer points. */
+/* Signature data is "x,y;x,y|x,y;x,y" (strokes separated by |).
+   Returns an array of strokes, each an array of [x, y] ints, with at most
+   SIG_MAX points in total. */
 export function compressSignature(data) {
-  const pts = (data || "")
-    .split(";")
-    .map((p) => p.split(",").map(Number))
-    .filter((p) => p.length === 2 && p.every(Number.isFinite));
-  if (pts.length <= SIG_MAX) return pts.map(([x, y]) => [x | 0, y | 0]);
-  const step = pts.length / SIG_MAX;
-  return Array.from({ length: SIG_MAX }, (_, i) => {
-    const [x, y] = pts[Math.floor(i * step)];
-    return [x | 0, y | 0];
+  const strokes = (data || "")
+    .split("|")
+    .map((st) =>
+      st
+        .split(";")
+        .map((p) => p.split(",").map(Number))
+        .filter((p) => p.length === 2 && p.every(Number.isFinite))
+        .map(([x, y]) => [x | 0, y | 0])
+    )
+    .filter((st) => st.length >= 1)
+    .slice(0, 8);
+  const total = strokes.reduce((n, st) => n + st.length, 0);
+  if (total <= SIG_MAX) return strokes;
+  return strokes.map((st) => {
+    const keep = Math.max(2, Math.round((st.length / total) * SIG_MAX));
+    if (st.length <= keep) return st;
+    const step = st.length / keep;
+    return Array.from({ length: keep }, (_, i) => st[Math.min(st.length - 1, Math.floor(i * step))]);
   });
+}
+
+/* Accepts either a flat point list [[x,y],…] (older entries) or a list of
+   strokes [[[x,y],…],…] and returns an SVG path. */
+export function sigToPath(sig) {
+  if (!Array.isArray(sig) || !sig.length) return "";
+  const strokes = Array.isArray(sig[0]?.[0]) ? sig : [sig];
+  return strokes
+    .filter((st) => st.length)
+    .map((st) => st.map(([x, y], i) => `${i ? "L" : "M"}${x} ${y}`).join(" "))
+    .join(" ");
 }
 
 export async function leaveRemnant({ tip, note, sig }) {

@@ -62,12 +62,23 @@ export function sanitize(body) {
     typeof note === "string"
       ? [...note.replace(/[\u0000-\u001f\u007f]/g, "")].slice(0, NOTE_MAX).join("").trim()
       : "";
-  const cleanSig = Array.isArray(sig)
-    ? sig
-        .slice(0, SIG_MAX)
-        .filter((p) => Array.isArray(p) && p.length === 2 && p.every((n) => Number.isInteger(n)))
-        .map(([x, y]) => [Math.max(0, Math.min(300, x)), Math.max(0, Math.min(100, y))])
-    : [];
+  const point = (p) =>
+    Array.isArray(p) && p.length === 2 && p.every((n) => Number.isInteger(n))
+      ? [Math.max(0, Math.min(300, p[0])), Math.max(0, Math.min(100, p[1]))]
+      : null;
+  let cleanSig = [];
+  if (Array.isArray(sig) && sig.length) {
+    const strokes = Array.isArray(sig[0]?.[0]) ? sig : [sig]; // flat list = one stroke
+    let budget = SIG_MAX;
+    cleanSig = strokes
+      .slice(0, 8)
+      .map((st) => {
+        const pts = (Array.isArray(st) ? st : []).map(point).filter(Boolean).slice(0, budget);
+        budget -= pts.length;
+        return pts;
+      })
+      .filter((st) => st.length);
+  }
   return { tip, note: cleanNote, sig: cleanSig };
 }
 

@@ -101,47 +101,45 @@ function ProofOfWork({ index, prevHash, onCommit }) {
 
 /* 3 ── signature: draw a gesture, the stroke becomes the block data */
 function Signature({ onCommit }) {
-  const [pts, setPts] = useState([]);
+  const [strokes, setStrokes] = useState([]);
   const drawing = useRef(false);
   const box = useRef(null);
-
   const pos = (e) => svgPoint(box.current, e);
   const down = (e) => {
+    e.preventDefault();
     drawing.current = true;
     box.current.setPointerCapture(e.pointerId);
-    setPts([pos(e)]);
+    setStrokes((s) => [...s, [pos(e)]]);
   };
   const move = (e) => {
     if (!drawing.current) return;
-    setPts((p) => [...p, pos(e)]);
+    setStrokes((s) => [...s.slice(0, -1), [...s[s.length - 1], pos(e)]]);
   };
   const up = () => {
-    if (!drawing.current) return;
     drawing.current = false;
-    if (pts.length >= 15) {
-      const data = pts.map((p) => `${p.x | 0},${p.y | 0}`).join(";");
-      onCommit("signature", data);
-    } else {
-      setPts([]);
-    }
   };
-
-  const d = pts.map((p, i) => `${i ? "L" : "M"}${p.x.toFixed(1)} ${p.y.toFixed(1)}`).join(" ");
+  const points = strokes.reduce((n, st) => n + st.length, 0);
+  const encode = () => strokes.map((st) => st.map((p) => `${p.x | 0},${p.y | 0}`).join(";")).join("|");
+  const path = (st) => st.map((p, i) => `${i ? "L" : "M"}${p.x.toFixed(1)} ${p.y.toFixed(1)}`).join(" ");
   return (
     <div className="eg-col">
-      <svg
-        ref={box}
-        className="eg-pad"
-        viewBox="0 0 300 100"
-        onPointerDown={down}
-        onPointerMove={move}
-        onPointerUp={up}
-        onPointerCancel={up}
-      >
-        <path d={d} />
+      <svg ref={box} className="eg-pad" viewBox="0 0 300 100" onPointerDown={down} onPointerMove={move} onPointerUp={up} onPointerCancel={up}>
+        {strokes.map((st, i) => (
+          <path key={i} d={path(st)} />
+        ))}
       </svg>
       <div className="eg-meta">
-        <span>{pts.length ? `${pts.length} points` : "draw anything in the box"}</span>
+        <span>{points ? `${strokes.length} stroke${strokes.length > 1 ? "s" : ""} · ${points} points` : "sign in the box · as many strokes as you like"}</span>
+        <span className="te-keys">
+          {points > 0 && (
+            <button type="button" onClick={() => setStrokes([])} title="clear">
+              ⌫
+            </button>
+          )}
+          <button type="button" className="te-ent" disabled={points < 15} onClick={() => onCommit("signature", encode())}>
+            ent
+          </button>
+        </span>
       </div>
     </div>
   );
@@ -159,16 +157,20 @@ function Message({ onCommit }) {
 }
 
 /* 5 ── peers: tap each node to bring it online and link the network */
+/* six nodes, never closer than MIN_GAP so every one is tappable */
+const MIN_GAP = 34;
+function scatterNodes(n) {
+  const out = [];
+  let guard = 0;
+  while (out.length < n && guard++ < 500) {
+    const c = { id: out.length, x: 20 + Math.random() * 260, y: 15 + Math.random() * 70 };
+    if (out.every((o) => Math.hypot(o.x - c.x, o.y - c.y) >= MIN_GAP)) out.push(c);
+  }
+  while (out.length < n) out.push({ id: out.length, x: 30 + out.length * 48, y: 50 }); // fallback row
+  return out;
+}
 function Peers({ onCommit }) {
-  const nodes = useMemo(
-    () =>
-      Array.from({ length: 6 }, (_, i) => ({
-        id: i,
-        x: 20 + Math.random() * 260,
-        y: 15 + Math.random() * 70,
-      })),
-    []
-  );
+  const nodes = useMemo(() => scatterNodes(6), []);
   const [order, setOrder] = useState([]);
   const orderRef = useRef(order);
   orderRef.current = order;
@@ -186,7 +188,15 @@ function Peers({ onCommit }) {
   };
 
   const pos = (e) => svgPoint(box.current, e);
-  const hit = (p) => nodes.find((n) => Math.hypot(n.x - p.x, n.y - p.y) < 11);
+  // nearest node within reach, preferring one that isn't connected yet
+  const hit = (p) => {
+    let best = null, bd = 12;
+    for (const n of nodes) {
+      const d = Math.hypot(n.x - p.x, n.y - p.y) + (orderRef.current.includes(n.id) ? 6 : 0);
+      if (d < bd) { bd = d; best = n; }
+    }
+    return best;
+  };
 
   // tap a node, or press and drag through nodes to link them in one motion
   const down = (e) => {

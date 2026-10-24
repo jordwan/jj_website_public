@@ -1,11 +1,10 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import { sha256, randomHex } from "./hash";
 import { svgPoint } from "./svg";
 
 export const isTouch = () =>
   typeof window !== "undefined" && window.matchMedia("(pointer: coarse)").matches;
 
-const INK_PAUSE = 1500; // ms after the pen lifts before the ink is hashed
 const HASH_LEN = 16;
 
 /* Desktop: a keyboard field with an "ent" button.
@@ -67,23 +66,23 @@ export default function TextEntry({ value, onChange, onSubmit, placeholder, maxL
 
 function InkPad({ value, onChange, onSubmit, placeholder, onKeyboard }) {
   const [strokes, setStrokes] = useState([]);
-  const [pending, setPending] = useState(false);
   const [reading, setReading] = useState(false);
   const [display, setDisplay] = useState(value);
   const drawing = useRef(false);
   const box = useRef(null);
-  const timer = useRef(null);
   const strokesRef = useRef(strokes);
   strokesRef.current = strokes;
 
   const pos = (e) => svgPoint(box.current, e);
   const down = (e) => {
     e.preventDefault();
-    clearTimeout(timer.current);
-    setPending(false);
+    if (reading) return;
     drawing.current = true;
     box.current.setPointerCapture(e.pointerId);
-    setStrokes((s) => [...s, [pos(e)]]);
+    // one touch = one input: a new stroke starts over
+    setDisplay("");
+    onChange("");
+    setStrokes([[pos(e)]]);
   };
   const move = (e) => {
     if (!drawing.current) return;
@@ -95,9 +94,7 @@ function InkPad({ value, onChange, onSubmit, placeholder, onKeyboard }) {
   const up = () => {
     if (!drawing.current) return;
     drawing.current = false;
-    clearTimeout(timer.current);
-    setPending(true);
-    timer.current = setTimeout(hashInk, INK_PAUSE);
+    hashInk(); // the moment the finger lifts
   };
 
   /* all ink on the pad → one hash */
@@ -111,7 +108,6 @@ function InkPad({ value, onChange, onSubmit, placeholder, onKeyboard }) {
   const LETTERS = "abcdefghijklmnopqrstuvwxyz";
   const guess = (n) => Array.from({ length: n }, () => LETTERS[(Math.random() * 26) | 0]).join("");
   const hashInk = async () => {
-    setPending(false);
     const h = await inkHash();
     if (!h) return;
     setReading(true);
@@ -131,22 +127,16 @@ function InkPad({ value, onChange, onSubmit, placeholder, onKeyboard }) {
 
   /* ent while ink is still pending: hash it first */
   const submitNow = async () => {
-    clearTimeout(timer.current);
-    setPending(false);
-    const h = strokesRef.current.length ? await inkHash() : value;
+    const h = value || (strokesRef.current.length ? await inkHash() : "");
     if (!h) return;
     onChange(h);
     setTimeout(() => onSubmit(h), 0);
   };
   const clear = () => {
-    clearTimeout(timer.current);
-    setPending(false);
     setStrokes([]);
     setDisplay("");
     onChange("");
   };
-
-  useEffect(() => () => clearTimeout(timer.current), []);
 
   const path = (s) => s.map((p, i) => `${i ? "L" : "M"}${p.x.toFixed(1)} ${p.y.toFixed(1)}`).join(" ");
 
@@ -158,7 +148,7 @@ function InkPad({ value, onChange, onSubmit, placeholder, onKeyboard }) {
       </div>
       <svg
         ref={box}
-        className={`eg-pad te-canvas ${pending ? "pending" : ""} ${reading ? "reading" : ""}`}
+        className={`eg-pad te-canvas ${reading ? "reading" : ""}`}
         viewBox="0 0 300 120"
         onPointerDown={down}
         onPointerMove={move}
@@ -171,16 +161,13 @@ function InkPad({ value, onChange, onSubmit, placeholder, onKeyboard }) {
         {reading && <line className="scan" x1="0" y1="0" x2="0" y2="120" />}
         {!strokes.length && !value && (
           <text x="150" y="112" className="te-tip">
-            draw anything · your ink becomes a hash
+            one stroke · it becomes a hash
           </text>
         )}
       </svg>
-      <div className="te-wait">
-        <div className={`fill ${pending ? "run" : ""}`} style={{ transitionDuration: `${INK_PAUSE}ms` }} />
-      </div>
       <div className="te-row">
         <div className="eg-meta">
-          <span>{reading ? "reading ink…" : pending ? "…" : strokes.length ? "keep drawing or press ent" : ""}</span>
+          <span>{reading ? "reading ink…" : value ? "draw again to replace · ent to use" : ""}</span>
         </div>
         <div className="te-keys">
           <button type="button" className="te-mode te-kbd" onClick={onKeyboard} title="use the keyboard" aria-label="use the keyboard">

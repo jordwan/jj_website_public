@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { loadRemnants, timeAgo } from "../easter/remnants";
+import { loadRemnants, sigToPath, timeAgo } from "../easter/remnants";
 import { short } from "../easter/hash";
 import { TOTAL } from "../easter/ChainExperience";
 import { Link, useRoute } from "../router";
@@ -35,9 +35,6 @@ export default function Archive({ chain }) {
       live = false;
     };
   }, []);
-
-  const path = (sig) =>
-    (sig || []).map(([x, y], i) => `${i ? "L" : "M"}${x} ${y}`).join(" ");
 
   if (!complete) {
     return (
@@ -89,7 +86,7 @@ export default function Archive({ chain }) {
                   <span className="status">{mine ? "you" : timeAgo(r.ts)}</span>
                 </div>
                 <svg className="artifact-sig" viewBox="0 0 300 100" aria-hidden="true">
-                  <path d={path(r.sig)} />
+                  <path d={sigToPath(r.sig)} />
                 </svg>
                 <p className="artifact-note">{r.note ? r.note : <span className="silent">passed in silence</span>}</p>
                 <div className="artifact-tip">{short(r.tip)}</div>

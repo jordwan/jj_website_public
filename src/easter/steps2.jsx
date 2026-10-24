@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { sha256, short } from "./hash";
-import { NOTE_MAX, compressSignature, leaveRemnant, timeAgo } from "./remnants";
+import { NOTE_MAX, compressSignature, leaveRemnant, sigToPath, timeAgo } from "./remnants";
 import TextEntry from "./TextEntry";
 import { svgPoint } from "./svg";
 
@@ -141,43 +141,54 @@ function Cipher({ onCommit }) {
 
 /* 4 ── ghosts: sign again, over the faint strokes of everyone before you */
 function Ghosts({ blocks, remnants, onCommit }) {
-  const [pts, setPts] = useState([]);
+  const [strokes, setStrokes] = useState([]);
   const drawing = useRef(false);
   const box = useRef(null);
   const mine = useMemo(() => compressSignature(blocks.find((b) => b.label === "signature")?.data), [blocks]);
-  const ghosts = useMemo(() => remnants.map((r) => r.sig).filter((s) => s?.length > 1).slice(0, 30), [remnants]);
+  const ghosts = useMemo(() => remnants.map((r) => r.sig).filter((g) => Array.isArray(g) && g.length).slice(0, 30), [remnants]);
 
   const pos = (e) => svgPoint(box.current, e);
   const down = (e) => {
+    e.preventDefault();
     drawing.current = true;
     box.current.setPointerCapture(e.pointerId);
-    setPts([pos(e)]);
+    setStrokes((s) => [...s, [pos(e)]]);
   };
-  const move = (e) => drawing.current && setPts((p) => [...p, pos(e)]);
-  const up = () => {
+  const move = (e) => {
     if (!drawing.current) return;
-    drawing.current = false;
-    if (pts.length >= 15) onCommit("ghosts", pts.map((p) => `${p.x | 0},${p.y | 0}`).join(";"));
-    else setPts([]);
+    setStrokes((s) => [...s.slice(0, -1), [...s[s.length - 1], pos(e)]]);
   };
-  const path = (arr) =>
-    arr
-      .map((p) => (Array.isArray(p) ? p : [p.x, p.y]))
-      .map(([x, y], i) => `${i ? "L" : "M"}${(+x).toFixed(1)} ${(+y).toFixed(1)}`)
-      .join(" ");
+  const up = () => {
+    drawing.current = false;
+  };
+  const points = strokes.reduce((n, st) => n + st.length, 0);
+  const encode = () => strokes.map((st) => st.map((p) => `${p.x | 0},${p.y | 0}`).join(";")).join("|");
+  const path = (st) => st.map((p, i) => `${i ? "L" : "M"}${p.x.toFixed(1)} ${p.y.toFixed(1)}`).join(" ");
 
   return (
     <div className="eg-col">
       <svg ref={box} className="eg-pad" viewBox="0 0 300 100" onPointerDown={down} onPointerMove={move} onPointerUp={up} onPointerCancel={up}>
         {ghosts.map((g, i) => (
-          <path key={i} className="ghost" d={path(g)} />
+          <path key={i} className="ghost" d={sigToPath(g)} />
         ))}
-        {mine.length > 1 && <path className="ghost mine" d={path(mine)} />}
-        <path d={path(pts)} />
+        {mine.length > 0 && <path className="ghost mine" d={sigToPath(mine)} />}
+        {strokes.map((st, i) => (
+          <path key={`s${i}`} d={path(st)} />
+        ))}
       </svg>
       <div className="eg-meta">
         <span>
           {ghosts.length ? `${ghosts.length} visitor${ghosts.length > 1 ? "s" : ""} signed here before you` : "no one has signed here yet"}
+        </span>
+        <span className="te-keys">
+          {points > 0 && (
+            <button type="button" onClick={() => setStrokes([])} title="clear">
+              ⌫
+            </button>
+          )}
+          <button type="button" className="te-ent" disabled={points < 15} onClick={() => onCommit("ghosts", encode())}>
+            ent
+          </button>
         </span>
       </div>
     </div>
