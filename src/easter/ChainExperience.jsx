@@ -170,6 +170,22 @@ export default function ChainExperience({ chain }) {
     return () => window.removeEventListener("keydown", onKey);
   }, [open, setOpen]);
 
+  const [confirm, setConfirm] = useState(false);
+  useEffect(() => {
+    if (!confirm) return;
+    const t = setTimeout(() => setConfirm(false), 3000);
+    return () => clearTimeout(t);
+  }, [confirm]);
+  const restart = () => {
+    if (!confirm) {
+      setConfirm(true);
+      return;
+    }
+    setConfirm(false);
+    reset();
+    setResumed(-1);
+  };
+
   if (!open) return null;
 
   const Step = step?.component;
@@ -183,9 +199,16 @@ export default function ChainExperience({ chain }) {
     <section className={`eg ${level > 0 ? "l2" : ""}`} aria-live="polite">
       <div className="eg-head">
         <span>{title}</span>
-        <button className="eg-x" onClick={() => setOpen(false)}>
-          esc
-        </button>
+        <span className="eg-head-actions">
+          {n > 0 && (
+            <button className={`eg-x ${confirm ? "warn" : ""}`} onClick={restart}>
+              {confirm ? "sure? tap again" : "restart"}
+            </button>
+          )}
+          <button className="eg-x" onClick={() => setOpen(false)}>
+            esc
+          </button>
+        </span>
       </div>
       {!showExplorer && <p className="eg-prompt">{mining ? "mining…" : step.prompt}</p>}
       <div className="eg-body">

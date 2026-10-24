@@ -66,6 +66,8 @@
   opacity: 0.7;
 }
 .eg-x:hover { opacity: 1; }
+.eg-head-actions { display: flex; gap: 14px; }
+.eg-x.warn { color: var(--eg-bad); opacity: 1; }
 
 .eg-prompt { margin: 10px 0 12px; }
 
