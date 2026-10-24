@@ -30,6 +30,15 @@ export const about = {
 
 export const projects = [
   {
+    title: "FootyFiend.com",
+    year: "2025",
+    status: "live",
+    tags: ["Next.js", "Supabase", "community", "video"],
+    blurb:
+      "The Future of Snowboarding. A community feed where riders post and rank snowboard and skate clips: category filters from street to backcountry, a weekly top-rider leaderboard, Clip of the Week, user profiles and hundreds of clips. Next.js front end on Supabase auth, database and storage.",
+    href: "https://footyfiend.com",
+  },
+  {
     title: "Jordwan.com",
     year: "2026",
     status: "live",
@@ -55,6 +64,15 @@ export const projects = [
       "7df6 02a9 aba0 a3b4 5052 a2d4 e554 7829 2386",
       "6696 d909 4b14 b40f 9f83 15df d4a4 15f1 0833",
     ],
+  },
+  {
+    title: "StreetzCalling.com",
+    year: "2024",
+    status: "live",
+    tags: ["React", "brand", "storefront"],
+    blurb:
+      "Product of the Streetz. Brand site for a streetwear label, with product and contact pages on a React front end, built lean so it can grow into a full storefront.",
+    href: "https://streetzcalling.com",
   },
   {
     title: "Okanagan Pulse",
