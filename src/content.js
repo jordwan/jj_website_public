@@ -78,4 +78,45 @@ export const projects = [
     blurb:
       "An NFT collection and its mint site. OpenZeppelin-based ERC-721 contract with per-wallet limits and reentrancy guards, deployed to a testnet, with a React front end that talked to MetaMask.",
   },
+  {
+    title: "▇▇▇▇▇▇▇ ▇▇",
+    year: "sealed",
+    status: "sealed",
+    sealed: true,
+    tags: ["[redacted]", "zero-knowledge", "settlement"],
+    cipher: [
+      "-----BEGIN SEALED PROJECT-----",
+      "eW91IGZvdW5kIHRoZSBzZWFtLiB0aGUgcmVzdCBpcyB1",
+      "bmRlciBuZGEgdW50aWwgdGhlIG5leHQgYmxvY2sgc2V0",
+      "dGxlcy4gaW5mb0Bqb3Jkd2FuLmNvbSDCtyBzdWJqZWN0",
+      "OiAweDAy",
+      "-----END SEALED PROJECT-----",
+    ],
+  },
+  {
+    title: "0x1f · ▇▇▇▇▇",
+    year: "sealed",
+    status: "sealed",
+    sealed: true,
+    tags: ["custody", "[redacted]", "threshold sigs"],
+    cipher: [
+      "8a34 0af0 a215 9ca5 7fef 04ee 8453 afec 1193",
+      "4539 cc7a 8a7a 71aa 83f4 3768 f09a 8659 8c0b",
+      "7df6 02a9 aba0 a3b4 5052 a2d4 e554 7829 2386",
+      "6696 d909 4b14 b40f 9f83 15df d4a4 15f1 0833",
+    ],
+  },
+  {
+    title: "Ξ∴◈ ▇▇▇▇",
+    year: "sealed",
+    status: "sealed",
+    sealed: true,
+    tags: ["consensus", "mesh", "[redacted]"],
+    cipher: [
+      "⟁⟟⟠ ⟊⟐⟑⟒ ⟓⟔⟕⟖⟗ ⟘⟙⟚ ⟛⟜⟝⟞⟟⟠⟡",
+      "⟢⟣⟤ ⟥⟦⟧⟨⟩ ⟪⟫⟬⟭ ⟮⟯⟰⟱⟲⟳ ⟴⟵⟶",
+      "⟷⟸⟹⟺ ⟻⟼⟽⟾ ⟿⤀⤁⤂⤃ ⤄⤅⤆⤇⤈⤉",
+      "key rotates at the next block.",
+    ],
+  },
 ];

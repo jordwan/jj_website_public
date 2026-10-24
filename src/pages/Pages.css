@@ -137,3 +137,42 @@ a.card:hover {
   .stack { grid-template-columns: 1fr; gap: 2px; }
   .stack dd { margin-bottom: 8px; }
 }
+
+/* sealed projects */
+button.card.sealed {
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  border-style: dashed;
+  border-color: rgba(216, 161, 42, 0.35);
+  background: rgba(0, 0, 0, 0.55);
+  -webkit-tap-highlight-color: transparent;
+}
+button.card.sealed:hover {
+  border-color: #d8a12a;
+  box-shadow: 0 0 14px rgba(216, 161, 42, 0.25);
+}
+.card.sealed h3 { letter-spacing: 0.1em; opacity: 0.85; }
+.status.sealed { color: #d8a12a; opacity: 0.9; letter-spacing: 0.14em; }
+.cipher {
+  margin: 0;
+  font-family: "VT323", monospace;
+  font-size: 1.05rem;
+  line-height: 1.3;
+  color: rgba(216, 161, 42, 0.75);
+  white-space: pre-wrap;
+  word-break: break-all;
+  text-shadow: 0 0 6px rgba(216, 161, 42, 0.25);
+}
+.cipher-note {
+  font-size: 1rem;
+  color: #ff5c6c;
+  opacity: 0.9;
+}
+.tags span.redacted {
+  background: rgba(255, 255, 255, 0.12);
+  color: transparent;
+  border-color: transparent;
+  text-shadow: none;
+  user-select: none;
+}
