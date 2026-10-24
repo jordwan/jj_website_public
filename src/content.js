@@ -30,14 +30,6 @@ export const about = {
 
 export const projects = [
   {
-    title: "FootyFiend.com",
-    year: "2009",
-    status: "live",
-    tags: ["Next.js", "Supabase", "community", "video"],
-    blurb:
-      "The Future of Snowboarding. A living archive and launchpad for snowboard and skate footage: riders drop clips, the community ranks them, and the leaderboard decides who owns the week. Fifteen years deep and still the first tab the culture opens.",
-  },
-  {
     title: "Jordwan.com",
     year: "2026",
     status: "live",
@@ -46,11 +38,19 @@ export const projects = [
       "Looks like a title and an email. Underneath, a working blockchain you mine with your hands, a Merkle tree you fold yourself, and a visitor chain that remembers everyone who finished. The site is the portfolio piece.",
   },
   {
+    title: "FootyFiend.com",
+    year: "2009",
+    status: "live",
+    tags: ["Next.js", "Supabase", "community", "video"],
+    blurb:
+      "The Future of Snowboarding. A living archive and launchpad for snowboard and skate footage: riders drop clips, the community ranks them, and the leaderboard decides who owns the week. Fifteen years deep and still the first tab the culture opens.",
+  },
+  {
     title: "Ledger Lens",
     status: "concept",
     tags: ["React", "d3", "JSON-RPC"],
     blurb:
-      "A block explorer rebuilt as a timeline. Scrub through history, watch the mempool breathe, and pull a single address as a thread through the entire chain.",
+      "A block explorer rebuilt as a timeline. Scrub through history, watch the mempool breathe, and pull a single address as a thread through the entire chain. The data was always there. Nobody had made it legible.",
   },
   {
     title: "8a340a…0b81",
@@ -75,14 +75,14 @@ export const projects = [
     status: "concept",
     tags: ["Next.js", "maps", "open data"],
     blurb:
-      "The valley on one screen. Lake temperature, trail conditions, smoke and ferry waits pulled live from public feeds and composed to be glanced at, not studied.",
+      "The valley on one screen. Lake temperature, trail conditions, smoke and ferry waits pulled live from public feeds and composed to be glanced at, not studied. The morning check, before the morning.",
   },
   {
     title: "Mint Kit",
     status: "concept",
     tags: ["TypeScript", "wagmi", "components"],
     blurb:
-      "The unglamorous half of every mint, solved once. Wallet connect, supply meters, quantity pickers and transaction toasts as drop-in components, themeable to anything and boring in exactly the ways that matter.",
+      "The unglamorous half of every mint, solved once and done properly. Wallet connect, supply meters, quantity pickers and transaction toasts as drop-in components, themeable to anything and battle-tested where it counts.",
   },
   {
     title: "0c4d17…fb6e",
@@ -99,7 +99,7 @@ export const projects = [
     status: "concept",
     tags: ["Canvas", "weather API", "pixel art"],
     blurb:
-      "A weather app with no numbers. A tiny animated pixel city that rains, snows, fogs and glows with the forecast. You just look out the window.",
+      "A weather app with no numbers. A tiny animated pixel city that rains, snows, fogs and glows with the real forecast, down to the hour. You just look out the window.",
   },
   {
     title: "SquirrelyMonz",
@@ -107,6 +107,6 @@ export const projects = [
     status: "archived",
     tags: ["Solidity", "ERC-721", "Hardhat", "ethers", "MetaMask"],
     blurb:
-      "An NFT collection with its own on-chain mint. Hardened ERC-721 contract, per-wallet limits, reentrancy guards, and a React mint site wired straight into MetaMask.",
+      "An NFT collection with its own on-chain mint, end to end. Hardened ERC-721 contract, per-wallet limits, reentrancy guards, and a React mint site wired straight into MetaMask. Shipped, audited by use, still standing.",
   },
 ];
