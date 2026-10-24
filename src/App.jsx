@@ -5,6 +5,7 @@ import Terminal from "./easter/Terminal";
 import { Router, useRoute } from "./router";
 import About from "./pages/About";
 import Portfolio from "./pages/Portfolio";
+import Archive from "./pages/Archive";
 import bgGif from "./assets/background/parallax-bg.gif";
 import "./App.css";
 
@@ -30,6 +31,7 @@ function Routes({ chain }) {
   const { path } = useRoute();
   if (path === "/about") return <About />;
   if (path === "/portfolio") return <Portfolio />;
+  if (path === "/archive") return <Archive chain={chain} />;
   return <Home chain={chain} />;
 }
 

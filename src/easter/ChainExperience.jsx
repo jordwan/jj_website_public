@@ -3,6 +3,7 @@ import { ZERO, hashBlock, randomHex, short, sleep } from "./hash";
 import { STEPS } from "./steps";
 import { STEPS2 } from "./steps2";
 import { loadRemnants } from "./remnants";
+import { useRoute } from "../router";
 import "./Easter.css";
 
 export const LEVELS = [STEPS, STEPS2];
@@ -84,6 +85,7 @@ function ChainBar({ blocks, level }) {
 
 function Explorer({ blocks, onReset, onContinue }) {
   const [status, setStatus] = useState("");
+  const { navigate } = useRoute();
   const complete = blocks.length >= TOTAL;
   const level = Math.floor(blocks.length / PER_LEVEL);
   const anchor = blocks.find((b) => b.label === "anchor");
@@ -99,7 +101,13 @@ function Explorer({ blocks, onReset, onContinue }) {
       setStatus(`✓ block ${b.index} ok`);
       await sleep(60);
     }
-    setStatus(complete ? `✓ chain valid · ${TOTAL} / ${TOTAL} blocks` : `✓ level ${level} valid · ${blocks.length} blocks`);
+    if (complete) {
+      setStatus(`✓ chain valid · ${TOTAL} / ${TOTAL} blocks · opening the archive…`);
+      await sleep(1400);
+      navigate("/archive");
+      return;
+    }
+    setStatus(`✓ level ${level} valid · ${blocks.length} blocks`);
   }
 
   function exportChain() {
@@ -134,6 +142,11 @@ function Explorer({ blocks, onReset, onContinue }) {
       {!complete && (
         <button className="eg-action eg-continue" onClick={onContinue}>
           level {level + 1} unlocked · continue →
+        </button>
+      )}
+      {complete && (
+        <button className="eg-action eg-continue" onClick={() => navigate("/archive")}>
+          enter the archive →
         </button>
       )}
     </div>

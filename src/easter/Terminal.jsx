@@ -4,7 +4,7 @@ import { TOTAL, PER_LEVEL } from "./ChainExperience";
 import { loadRemnants } from "./remnants";
 import "./Easter.css";
 
-const HELP = "help · whoami · chain · remnants · mine · hash <text> · clear · exit";
+const HELP = "help · whoami · chain · remnants · archive · mine · hash <text> · clear · exit";
 
 export default function Terminal({ chain }) {
   const [open, setOpen] = useState(false);
@@ -61,6 +61,11 @@ export default function Terminal({ chain }) {
         r.remnants.slice(0, 3).forEach((x) => print(`#${x.n} · ${x.note || "—"} · ${short(x.tip)}`));
         break;
       }
+      case "archive":
+        window.history.pushState({}, "", "/archive");
+        window.dispatchEvent(new PopStateEvent("popstate"));
+        setOpen(false);
+        break;
       case "mine":
         chain.setOpen(true);
         setOpen(false);
