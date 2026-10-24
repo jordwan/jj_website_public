@@ -313,7 +313,7 @@ will this feeling pass by morning?
 will i learn the lesson this time?
 will i get to see the place i keep picturing?
 will the door i'm knocking on open?
-will i be ready when it does?
+will i be ready when the door finally opens?
 will i be surprised by who shows up?
 will i keep the promise i made in the dark?
 will i still love this in ten years?
@@ -336,9 +336,9 @@ will i go where i said i would?
 will i be kind to myself tonight?
 will i sleep well?
 will this chapter be short?
-will the next one be better?
+will the next chapter be better than this one?
 will i get what i'm asking for?
-will i be okay without it?
+will i be okay without the thing i'm asking for?
 will i stop waiting?
 will the timing ever feel right?
 will i choose the harder road?
@@ -346,8 +346,8 @@ will the risk pay off?
 will i be lonely in the new place?
 will i outlive my doubt?
 will i build the thing?
-will anyone use it?
-will it matter if they don't?
+will anyone use the thing i build?
+will it matter if no one uses what i build?
 will i grow into the name i was given?
 will i learn to say no?
 will i learn to say yes?
@@ -381,7 +381,7 @@ will the city feel like mine eventually?
 will i stop checking?
 will i start writing?
 will i get the job?
-will i want it when i do?
+will i still want the job once i get it?
 will the garden grow?
 will i taste it again, that one summer?
 will i keep in touch?
@@ -390,8 +390,8 @@ will i forgive quickly next time?
 will the plan change me?
 will the mountain still be there?
 will i make it to the top?
-will the view be worth it?
-will i turn back at the right time?
+will the view from the top be worth the climb?
+will i know the right time to turn back on the mountain?
 will i get home before dark?
 will the light be good tomorrow?
 will the dog be waiting?
@@ -450,7 +450,7 @@ do i love harder when i'm about to lose something?
 is there a friendship i'm keeping alive out of guilt?
 do i know how to be a good guest in someone's life?
 am i the one who always reaches out first?
-is that okay?
+is it okay that i'm usually the one who reaches out first?
 do i confuse being needed with being loved?
 is there someone i still haven't let go of?
 do i make people feel safe or impressed?
@@ -478,7 +478,7 @@ do i know how my partner takes their coffee?
 have i ever really seen someone?
 is there a goodbye i never said?
 am i replaceable in the lives i'm in?
-do i want to be?
+do i want to be irreplaceable to anyone?
 is the group chat where the friendship actually lives?
 do i know my friends' fears?
 is there a wedding i'll regret missing?
@@ -490,7 +490,7 @@ do i know what my friends need from me?
 am i a safe place to fail?
 do i love my hometown or the version of me that lived there?
 is there a teacher who changed my life?
-did i ever tell them?
+did i ever thank the teacher who changed my life?
 do i owe a stranger a kindness i received?
 is the person i miss the person who exists?
 have i been loved well?
@@ -502,7 +502,7 @@ is there someone who forgave me and i never knew?
 would i be a good parent?
 am i a good child?
 is my circle smaller than it used to be?
-is that a loss or a focus?
+is my shrinking circle a loss or a focus?
 do i know who would show up to help me move?
 am i honest in the small moments?
 is there a friendship worth rescuing this month?
@@ -603,7 +603,7 @@ do i finish things or abandon them at ninety percent?
 is my best idea the one i'm embarrassed by?
 do i make things for the person i was?
 is my taste better than my skill right now?
-is that a good sign?
+is having better taste than skill a good sign?
 am i copying or learning?
 do i know what my work is for?
 is there a tool i've outgrown?
@@ -616,7 +616,7 @@ am i wasting my talent on safe things?
 would i hire me?
 do i take feedback or take it personally?
 is there a mentor i never thanked?
-am i mentoring anyone?
+am i mentoring anyone the way i was mentored?
 is my work kind to the people who use it?
 do i know what done looks like?
 am i the kind of colleague i'd want?
@@ -625,7 +625,7 @@ do i confuse urgency with importance?
 is my inbox running my life?
 am i productive or just occupied?
 do i know when i'm at my best?
-do i protect that time?
+do i protect the hours when i'm at my best?
 is there an email i'm avoiding?
 is the thing i'm procrastinating on the thing that matters most?
 would i be relieved if the project got cancelled?
@@ -776,7 +776,7 @@ do i honour what i lost or just avoid it?
 is there a loss that changed what i value?
 am i healing or just getting used to it?
 would they want me to be happy?
-do i believe that?
+do i believe they'd want me to be happy?
 is there a tradition i've let go of that i miss?
 am i mourning a place?
 is there a loss i'm grateful for now?
@@ -787,7 +787,7 @@ is there a wound that became a window?
 do i know the weight of what i carry?
 is there a loss that taught me how to love?
 am i still angry at the universe?
-is that fair?
+is it fair to still be angry at the universe?
 do i trust the ground again?
 is there a hand i wish were still here?
 am i kinder because of what i lost?
@@ -798,7 +798,7 @@ am i allowed to laugh about it yet?
 is there a part of me that died with them?
 is there a part of me that was born then?
 do i know what i believe about what comes after?
-does it matter?
+does what i believe about the afterlife change how i live?
 am i living like it's short?
 am i living like it's long?
 is there a sunset i'd like to be remembered by?
@@ -889,7 +889,7 @@ did i build the thing i said i would?
 was the dream mine?
 did i learn anything from the year i'd rather forget?
 was that the best summer?
-did i know it at the time?
+did i know it was the best summer while it was happening?
 was i fully there for any of it?
 did i keep my word to the kid i was?
 was there a friendship i let die of neglect?
