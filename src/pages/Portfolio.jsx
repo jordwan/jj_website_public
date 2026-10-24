@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
 import { projects } from "../content";
-import { Link } from "../router";
 import "./Pages.css";
 
 const NOISE = "0123456789abcdef";
@@ -39,11 +38,11 @@ function SealedCard({ p }) {
 
 function Card({ p }) {
   if (p.sealed) return <SealedCard p={p} />;
-  const body = (
-    <>
+  return (
+    <div className="card">
       <div className="card-top">
         <h3>{p.title}</h3>
-        <span className={`status ${p.status}`}>{p.status === "concept" ? "concept" : p.year}</span>
+        {p.year && <span className="status">{p.year}</span>}
       </div>
       <p>{p.blurb}</p>
       <div className="tags">
@@ -51,35 +50,16 @@ function Card({ p }) {
           <span key={t}>{t}</span>
         ))}
       </div>
-    </>
+    </div>
   );
-  if (p.href?.startsWith("/")) {
-    return (
-      <Link to={p.href} className="card">
-        {body}
-      </Link>
-    );
-  }
-  if (p.href) {
-    return (
-      <a className="card" href={p.href} target="_blank" rel="noreferrer">
-        {body}
-      </a>
-    );
-  }
-  return <div className="card">{body}</div>;
 }
 
 export default function Portfolio() {
-  const concept = projects.filter((p) => p.status === "concept").length;
-  const live = projects.filter((p) => !p.sealed && p.status !== "concept").length;
   return (
     <main className="page">
       <div className="page-inner">
         <header className="page-head">
-          <p className="page-kicker">
-            portfolio · {live} shipped · {concept} on the bench
-          </p>
+          <p className="page-kicker">portfolio · selected work</p>
           <h1 className="page-title">Things I've built</h1>
           <p className="page-tagline">and a few I'm circling.</p>
         </header>

@@ -5,8 +5,9 @@ pages. Built with React + Vite. Routes are client-side (`src/router.jsx`);
 `vercel.json` rewrites deep links to `index.html`.
 
 Page copy for About and Portfolio lives in `src/content.js`. Portfolio items
-marked `status: "concept"` are placeholders to replace with real work. Items
-with `sealed: true` render as hash-only cards.
+marked `status: "concept"` are placeholder ideas (the label is not shown on
+the page). Items with `sealed: true` render as hash-only cards. Cards do not
+link anywhere.
 
 ```shell
 npm install

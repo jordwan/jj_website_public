@@ -31,12 +31,11 @@ export const about = {
 export const projects = [
   {
     title: "FootyFiend.com",
-    year: "2025",
+    year: "2009",
     status: "live",
     tags: ["Next.js", "Supabase", "community", "video"],
     blurb:
       "The Future of Snowboarding. A community feed where riders post and rank snowboard and skate clips: category filters from street to backcountry, a weekly top-rider leaderboard, Clip of the Week, user profiles and hundreds of clips. Next.js front end on Supabase auth, database and storage.",
-    href: "https://footyfiend.com",
   },
   {
     title: "Jordwan.com",
@@ -45,11 +44,9 @@ export const projects = [
     tags: ["React", "Vite", "SHA-256", "serverless"],
     blurb:
       "This site. A quiet landing page with a two-level, twenty-block blockchain hidden behind the title: real hashes, proof of work you hold to mine, a Merkle tree you fold by hand, and traces left by every visitor who anchored before you.",
-    href: "/",
   },
   {
     title: "Ledger Lens",
-    year: "concept",
     status: "concept",
     tags: ["React", "d3", "JSON-RPC"],
     blurb:
@@ -67,16 +64,14 @@ export const projects = [
   },
   {
     title: "StreetzCalling.com",
-    year: "2024",
+    year: "2019",
     status: "live",
     tags: ["React", "brand", "storefront"],
     blurb:
       "Product of the Streetz. Brand site for a streetwear label, with product and contact pages on a React front end, built lean so it can grow into a full storefront.",
-    href: "https://streetzcalling.com",
   },
   {
     title: "Okanagan Pulse",
-    year: "concept",
     status: "concept",
     tags: ["Next.js", "maps", "open data"],
     blurb:
@@ -84,7 +79,6 @@ export const projects = [
   },
   {
     title: "Mint Kit",
-    year: "concept",
     status: "concept",
     tags: ["TypeScript", "wagmi", "components"],
     blurb:
@@ -102,7 +96,6 @@ export const projects = [
   },
   {
     title: "Pixel Forecast",
-    year: "concept",
     status: "concept",
     tags: ["Canvas", "weather API", "pixel art"],
     blurb:
