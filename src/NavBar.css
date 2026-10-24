@@ -28,11 +28,14 @@
 }
 .nav-hidden.revealed,
 .nav-hidden:focus-within {
-  opacity: 0.4;
+  opacity: 0.14;
 }
 .nav-hidden.revealed:hover {
-  opacity: 0.75;
+  opacity: 0.3;
 }
+/* even when revealed, no glow and no gold: just a whisper */
+.nav-hidden a { text-shadow: none; }
+.nav-hidden a.active { color: white; }
 
 .nav-links a,
 .nav-email a {

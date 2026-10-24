@@ -16,7 +16,7 @@ const NavBar = ({ chain }) => {
   }, [home]);
   useEffect(() => {
     clearTimeout(fade.current);
-    if (home && revealed) fade.current = setTimeout(() => setRevealed(false), 12000);
+    if (home && revealed) fade.current = setTimeout(() => setRevealed(false), 6000);
     return () => clearTimeout(fade.current);
   }, [home, revealed]);
 
