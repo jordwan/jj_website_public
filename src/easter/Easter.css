@@ -593,3 +593,7 @@
   touch-action: none;
   min-width: 13ch; /* label changes while holding; keep the button steady */
 }
+.eg-nudge {
+  min-width: 21ch; /* "propagating · 10.0s" never shifts the button */
+  touch-action: manipulation; /* taps register instantly, no double-tap zoom */
+}

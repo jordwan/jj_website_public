@@ -295,7 +295,9 @@ function Timelock({ onCommit }) {
   return (
     <div className="eg-col">
       <button
-        className="eg-action eg-hold"
+        className="eg-action eg-hold eg-nudge"
+        onPointerDown={(e) => e.preventDefault()}
+        onContextMenu={(e) => e.preventDefault()}
         onClick={() => {
           setLeft((l) => Math.max(0, l - 0.4));
           setTaps((t) => t + 1);
