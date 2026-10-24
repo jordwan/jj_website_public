@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { sha256, short } from "./hash";
 import { NOTE_MAX, compressSignature, leaveRemnant, timeAgo } from "./remnants";
+import TextEntry from "./TextEntry";
 
 /* 1 ── handshake: a short glyph sequence to echo back */
 const GLYPHS = ["◆", "◇", "●", "○", "▲", "△"];
@@ -366,17 +367,17 @@ function Merkle({ blocks, onCommit }) {
 /* 9 ── trace: leave something for the next visitor */
 function Trace({ onCommit }) {
   const [v, setV] = useState("");
-  const submit = (e) => {
-    e.preventDefault();
-    onCommit("trace", v.trim() || "silence");
-  };
+  const submit = () => onCommit("trace", v.trim() || "silence");
   return (
-    <form className="eg-col" onSubmit={submit}>
-      <input className="eg-input" autoFocus maxLength={NOTE_MAX} placeholder={`up to ${NOTE_MAX} characters, press enter`} value={v} onChange={(e) => setV(e.target.value)} />
+    <div className="eg-col">
+      <TextEntry value={v} onChange={setV} onSubmit={submit} autoFocus maxLength={NOTE_MAX} placeholder={`up to ${NOTE_MAX} characters`} />
       <div className="eg-meta">
-        <span>this will be visible to future visitors. leave it empty to pass in silence.</span>
+        <span>this will be visible to future visitors.</span>
+        <button className="eg-link-btn" onClick={() => onCommit("trace", "silence")}>
+          pass in silence →
+        </button>
       </div>
-    </form>
+    </div>
   );
 }
 

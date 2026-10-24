@@ -490,3 +490,56 @@
   .eg-node { min-width: 34px; font-size: 0.7rem; }
   .eg-row:first-child .eg-node { min-width: 70px; }
 }
+
+/* ── text entry ─────────────────────────────────────── */
+.te {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.te .eg-input { flex: 1; }
+.te-ent,
+.te-mode,
+.te-keys button,
+.te-cands button {
+  background: none;
+  border: 1px solid var(--eg-line);
+  color: inherit;
+  font: inherit;
+  font-size: 1rem;
+  padding: 5px 12px;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: border-color 0.2s, color 0.2s;
+}
+.te-ent { border-color: rgba(216, 161, 42, 0.6); color: var(--eg-gold); }
+.te-ent:disabled { opacity: 0.35; cursor: default; }
+.te-ent:not(:disabled):hover { box-shadow: 0 0 10px rgba(216, 161, 42, 0.25); }
+.te-mode { opacity: 0.6; }
+.te-keys button:hover,
+.te-cands button:hover { border-color: var(--eg-gold); color: var(--eg-gold); }
+
+.te-pad { flex-direction: column; align-items: stretch; gap: 8px; }
+.te-out {
+  min-height: 1.5em;
+  border-bottom: 1px solid var(--eg-line);
+  padding: 4px 2px;
+  word-break: break-word;
+}
+.te-out .ph { color: rgba(255, 255, 255, 0.3); }
+.te-caret { opacity: 0.5; animation: eg-blink 1.1s steps(1) infinite; }
+.te-canvas { height: 150px; cursor: crosshair; transition: border-color 0.15s; }
+.te-canvas.flash { border-color: var(--eg-gold); }
+.te-canvas .guide { stroke: rgba(255, 255, 255, 0.08); stroke-width: 1; stroke-dasharray: 4 6; }
+.te-canvas path { stroke-width: 2.2; }
+.te-tip {
+  fill: rgba(255, 255, 255, 0.3);
+  font-family: "VT323", monospace;
+  font-size: 11px;
+  text-anchor: middle;
+}
+.te-row { display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap; }
+.te-cands { display: flex; gap: 6px; min-height: 30px; }
+.te-cands button { min-width: 34px; color: var(--eg-gold); opacity: 0.8; }
+.te-keys { display: flex; gap: 6px; margin-left: auto; }

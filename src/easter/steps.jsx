@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { hashBlock, randomHex, sha256, short } from "./hash";
+import TextEntry from "./TextEntry";
 
 /* 1 ── genesis: a single tap */
 function Genesis({ onCommit }) {
@@ -127,21 +128,11 @@ function Signature({ onCommit }) {
 /* 4 ── message: a line of text written into the chain */
 function Message({ onCommit }) {
   const [v, setV] = useState("");
-  const submit = (e) => {
-    e.preventDefault();
-    if (v.trim()) onCommit("message", v.trim());
-  };
+  const submit = () => v.trim() && onCommit("message", v.trim());
   return (
-    <form className="eg-col" onSubmit={submit}>
-      <input
-        className="eg-input"
-        autoFocus
-        maxLength={64}
-        placeholder="type something, press enter"
-        value={v}
-        onChange={(e) => setV(e.target.value)}
-      />
-    </form>
+    <div className="eg-col">
+      <TextEntry value={v} onChange={setV} onSubmit={submit} autoFocus maxLength={64} placeholder="type something, press enter" />
+    </div>
   );
 }
 
@@ -212,7 +203,7 @@ function Tamper({ blocks, onCommit }) {
   const after = blocks.filter((b) => b.index > target.index);
   return (
     <div className="eg-col">
-      <input className="eg-input" value={v} onChange={(e) => setV(e.target.value)} />
+      <TextEntry value={v} onChange={setV} maxLength={64} placeholder="your message" />
       <div className="eg-ledger">
         <div className={touched ? "bad" : ""}>
           block {target.index} · {short(target.hash)} → {short(newHash)}
@@ -322,8 +313,7 @@ function Oracle({ prevHash, onCommit }) {
   const [shown, setShown] = useState("");
   const [full, setFull] = useState("");
 
-  const ask = async (e) => {
-    e.preventDefault();
+  const ask = async () => {
     if (!q.trim()) return;
     const h = await sha256(q.trim() + prevHash);
     setAsked(q.trim());
@@ -345,16 +335,7 @@ function Oracle({ prevHash, onCommit }) {
   return (
     <div className="eg-col">
       {!asked ? (
-        <form onSubmit={ask}>
-          <input
-            className="eg-input"
-            autoFocus
-            maxLength={80}
-            placeholder="ask the chain a yes / no question"
-            value={q}
-            onChange={(e) => setQ(e.target.value)}
-          />
-        </form>
+        <TextEntry value={q} onChange={setQ} onSubmit={ask} autoFocus maxLength={80} placeholder="ask the chain a yes / no question" />
       ) : (
         <>
           <div className="eg-meta">
