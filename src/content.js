@@ -35,7 +35,7 @@ export const projects = [
     status: "live",
     tags: ["React", "Vite", "SHA-256", "serverless"],
     blurb:
-      "Looks like a title and an email. Underneath, a working blockchain you mine with your hands, a Merkle tree you fold yourself, and a visitor chain that remembers everyone who finished. The site is the portfolio piece.",
+      "Blockchain, hidden in plain sight. A quiet landing page with a working chain underneath: proof of work you mine with your hands, signatures you draw, a Merkle tree you fold yourself, and a visitor chain that remembers everyone who made it to the end. Every hash is real. The site is the portfolio piece.",
   },
   {
     title: "FootyFiend.com",
