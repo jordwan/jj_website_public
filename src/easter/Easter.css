@@ -218,7 +218,7 @@
 /* explorer */
 .eg-explorer { width: 100%; display: flex; flex-direction: column; gap: 10px; }
 .eg-list {
-  max-height: 170px;
+  max-height: 260px;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
@@ -325,7 +325,33 @@
 
 /* ── level 2 ────────────────────────────────────────── */
 .eg.l2 { border-color: rgba(216, 161, 42, 0.35); }
-.eg-actions button.accent { color: var(--eg-gold); opacity: 0.9; }
+.eg-continue {
+  margin-top: 4px;
+  border-color: var(--eg-gold);
+  color: var(--eg-gold);
+  box-shadow: 0 0 12px rgba(216, 161, 42, 0.2);
+  animation: eg-pulse-gold 1.8s ease-in-out infinite;
+}
+@keyframes eg-pulse-gold {
+  50% { box-shadow: 0 0 18px rgba(216, 161, 42, 0.45); }
+}
+
+/* quiet scrollbars inside the panel */
+.eg-list,
+.eg-echoes,
+.hero {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.18) transparent;
+}
+.eg-list::-webkit-scrollbar,
+.eg-echoes::-webkit-scrollbar,
+.hero::-webkit-scrollbar { width: 4px; }
+.eg-list::-webkit-scrollbar-track,
+.eg-echoes::-webkit-scrollbar-track,
+.hero::-webkit-scrollbar-track { background: transparent; }
+.eg-list::-webkit-scrollbar-thumb,
+.eg-echoes::-webkit-scrollbar-thumb,
+.hero::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.18); border-radius: 2px; }
 .eg-ledger .accent { color: var(--eg-gold); }
 
 .eg-glyphs {

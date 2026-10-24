@@ -85,6 +85,7 @@ function ChainBar({ blocks, level }) {
 function Explorer({ blocks, onReset, onContinue }) {
   const [status, setStatus] = useState("");
   const complete = blocks.length >= TOTAL;
+  const level = Math.floor(blocks.length / PER_LEVEL);
   const anchor = blocks.find((b) => b.label === "anchor");
 
   async function verify() {
@@ -98,7 +99,7 @@ function Explorer({ blocks, onReset, onContinue }) {
       setStatus(`✓ block ${b.index} ok`);
       await sleep(60);
     }
-    setStatus(`✓ chain valid · ${blocks.length} / ${TOTAL} blocks`);
+    setStatus(complete ? `✓ chain valid · ${TOTAL} / ${TOTAL} blocks` : `✓ level ${level} valid · ${blocks.length} blocks`);
   }
 
   function exportChain() {
@@ -125,17 +126,16 @@ function Explorer({ blocks, onReset, onContinue }) {
         ))}
       </div>
       <div className="eg-actions">
-        {!complete && (
-          <button className="accent" onClick={onContinue}>
-            continue → level {Math.floor(blocks.length / PER_LEVEL) + 1}
-          </button>
-        )}
         <button onClick={verify}>verify</button>
         <button onClick={exportChain}>export</button>
         <button onClick={onReset}>reset</button>
       </div>
-      {!anchor && <div className="eg-status">{status}</div>}
-      {anchor && status && <div className="eg-status">{status}</div>}
+      <div className="eg-status">{status}</div>
+      {!complete && (
+        <button className="eg-action eg-continue" onClick={onContinue}>
+          level {level + 1} unlocked · continue →
+        </button>
+      )}
     </div>
   );
 }
@@ -217,7 +217,7 @@ export default function ChainExperience({ chain }) {
           ✓ block {last.index} sealed · {short(last.hash)}
         </p>
       )}
-      {!complete && <ChainBar blocks={blocks} level={level} />}
+      {!complete && <ChainBar blocks={blocks} level={showExplorer ? level - 1 : level} />}
     </section>
   );
 }
