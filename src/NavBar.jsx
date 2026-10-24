@@ -35,14 +35,16 @@ const NavBar = ({ chain }) => {
 
   return (
     <nav className="navbar">
-      <div
-        className={`nav-links ${revealed ? "revealed" : ""}`}
-        onClickCapture={onLinksClick}
-        aria-label="pages"
-      >
+      <div className="nav-links">
         <Link to="/">Home</Link>
-        <Link to="/about">About Me</Link>
-        <Link to="/portfolio">Portfolio</Link>
+        <div
+          className={`nav-hidden ${revealed ? "revealed" : ""}`}
+          onClickCapture={onLinksClick}
+          aria-label="more pages"
+        >
+          <Link to="/about">About Me</Link>
+          <Link to="/portfolio">Portfolio</Link>
+        </div>
       </div>
       <div className="nav-email">
         <a href={MAILTO} onClick={onEmail}>
