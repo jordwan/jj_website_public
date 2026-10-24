@@ -9,6 +9,8 @@ function App() {
   const chain = useChain();
 
   const toggle = () => chain.setOpen((o) => !o);
+  // mailto still fires (default not prevented); the panel opens alongside it
+  const openChain = () => chain.setOpen(true);
 
   return (
     <div className="app">
@@ -28,7 +30,7 @@ function App() {
           >
             Jordwan.com<span className="cursor">_</span>
           </p>
-          <a className="hero-sub" href="mailto:info@jordwan.com">
+          <a className="hero-sub" href="mailto:info@jordwan.com" onClick={openChain}>
             info@jordwan.com
           </a>
           <ChainExperience chain={chain} />
