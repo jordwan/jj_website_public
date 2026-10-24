@@ -63,7 +63,11 @@ body {
   font-size: 1.8rem;
   margin: 0;
   letter-spacing: 0.1em;
+  color: inherit;
+  text-decoration: none;
+  transition: color 0.2s;
 }
+.hero-sub:hover { color: #d8a12a; }
 
 @media (max-width: 768px) {
   .hero-title {

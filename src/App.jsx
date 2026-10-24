@@ -19,16 +19,18 @@ function App() {
       <div className="overlay">
         <NavBar />
         <main className="hero">
-          <p className="hero-title">Jordwan.com</p>
           <p
-            className="hero-sub is-trigger"
+            className="hero-title is-trigger"
             role="button"
             tabIndex={0}
             onClick={toggle}
             onKeyDown={(e) => (e.key === "Enter" || e.key === " ") && toggle()}
           >
-            Blockchain<span className="cursor">_</span>
+            Jordwan.com<span className="cursor">_</span>
           </p>
+          <a className="hero-sub" href="mailto:info@jordwan.com">
+            info@jordwan.com
+          </a>
           <ChainExperience chain={chain} />
         </main>
       </div>

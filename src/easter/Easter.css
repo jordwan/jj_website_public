@@ -10,18 +10,19 @@
 }
 
 /* trigger */
-.hero-sub.is-trigger {
+.is-trigger {
   cursor: pointer;
   user-select: none;
   transition: text-shadow 0.3s, color 0.3s;
 }
-.hero-sub.is-trigger:hover,
-.hero-sub.is-trigger:focus-visible {
+.is-trigger:hover,
+.is-trigger:focus-visible {
   color: var(--eg-gold, #d8a12a);
   text-shadow: 0 0 10px rgba(216, 161, 42, 0.5);
   outline: none;
 }
-.hero-sub .cursor {
+.is-trigger .cursor {
+  font-size: 0.7em;
   display: inline-block;
   margin-left: 2px;
   opacity: 0.5;
