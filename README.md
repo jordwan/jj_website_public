@@ -6,8 +6,7 @@ pages. Built with React + Vite. Routes are client-side (`src/router.jsx`);
 
 Page copy for About and Portfolio lives in `src/content.js`. Portfolio items
 marked `status: "concept"` are placeholders to replace with real work. Items
-with `sealed: true` render as ciphertext cards; the first one's base64
-decodes to a short message for anyone curious enough to try.
+with `sealed: true` render as hash-only cards.
 
 ```shell
 npm install

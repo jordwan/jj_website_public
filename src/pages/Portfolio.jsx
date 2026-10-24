@@ -3,18 +3,16 @@ import { projects } from "../content";
 import { Link } from "../router";
 import "./Pages.css";
 
-const NOISE = "0123456789abcdef▇▓▒░⟁⟐⟒⟡Ξ∴◈";
+const NOISE = "0123456789abcdef";
 const scrambleLine = (line, keep) =>
   [...line].map((c, i) => (c === " " || c === "-" || i < keep ? c : NOISE[(Math.random() * NOISE.length) | 0])).join("");
 
-/* A project that is visibly encrypted. Hovering tries to decrypt it and
-   fails; clicking asks for clearance. One of them is genuinely decodable. */
+/* A project that is only a hash. Hovering flickers it; nothing more. */
 function SealedCard({ p }) {
   const [lines, setLines] = useState(p.cipher);
-  const [note, setNote] = useState("");
   const timer = useRef(null);
 
-  const decrypt = () => {
+  const flicker = () => {
     clearInterval(timer.current);
     let frame = 0;
     timer.current = setInterval(() => {
@@ -29,27 +27,13 @@ function SealedCard({ p }) {
   };
   useEffect(() => () => clearInterval(timer.current), []);
 
-  const click = () => {
-    setNote((n) => (n ? "" : "decryption failed · clearance required"));
-    decrypt();
-  };
-
   return (
-    <button className="card sealed" onMouseEnter={decrypt} onClick={click} title="sealed">
+    <div className="card sealed" onMouseEnter={flicker} onTouchStart={flicker}>
       <div className="card-top">
         <h3>{p.title}</h3>
-        <span className="status sealed">sealed</span>
       </div>
       <pre className="cipher">{lines.join("\n")}</pre>
-      {note && <p className="cipher-note">{note}</p>}
-      <div className="tags">
-        {p.tags.map((t) => (
-          <span key={t} className={t.startsWith("[") ? "redacted" : ""}>
-            {t}
-          </span>
-        ))}
-      </div>
-    </button>
+    </div>
   );
 }
 
@@ -87,18 +71,17 @@ function Card({ p }) {
 }
 
 export default function Portfolio() {
-  const sealed = projects.filter((p) => p.sealed).length;
   const concept = projects.filter((p) => p.status === "concept").length;
-  const live = projects.length - sealed - concept;
+  const live = projects.filter((p) => !p.sealed && p.status !== "concept").length;
   return (
     <main className="page">
       <div className="page-inner">
         <header className="page-head">
           <p className="page-kicker">
-            portfolio · {live} shipped · {concept} on the bench · {sealed} sealed
+            portfolio · {live} shipped · {concept} on the bench
           </p>
           <h1 className="page-title">Things I've built</h1>
-          <p className="page-tagline">and a few I can't talk about yet.</p>
+          <p className="page-tagline">and a few I'm circling.</p>
         </header>
         <div className="grid">
           {projects.map((p) => (

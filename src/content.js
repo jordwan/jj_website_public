@@ -47,6 +47,16 @@ export const projects = [
       "A block explorer that treats a chain like a timeline instead of a table. Scrub through blocks, watch the mempool drain, and follow a single address as a thread through the whole thing.",
   },
   {
+    title: "8a340a…0b81",
+    sealed: true,
+    cipher: [
+      "8a34 0af0 a215 9ca5 7fef 04ee 8453 afec 1193",
+      "4539 cc7a 8a7a 71aa 83f4 3768 f09a 8659 8c0b",
+      "7df6 02a9 aba0 a3b4 5052 a2d4 e554 7829 2386",
+      "6696 d909 4b14 b40f 9f83 15df d4a4 15f1 0833",
+    ],
+  },
+  {
     title: "Okanagan Pulse",
     year: "concept",
     status: "concept",
@@ -63,6 +73,16 @@ export const projects = [
       "Drop-in React components for mint pages: wallet connect, supply meter, quantity picker and transaction toasts, all themeable and all boring in the ways that matter.",
   },
   {
+    title: "0c4d17…fb6e",
+    sealed: true,
+    cipher: [
+      "0c4d 17fd 8e9f 69ed 2b58 0be0 dc4b 1c59 ecff",
+      "3a98 cf24 932e e7b6 fbb3 6c13 a058 dc35 17b4",
+      "c583 45e3 9a99 e0b8 f955 8826 0be0 2c75 af94",
+      "71ed c57e cc44 926c b7fc e17a c64b a2ea cb82",
+    ],
+  },
+  {
     title: "Pixel Forecast",
     year: "concept",
     status: "concept",
@@ -77,46 +97,5 @@ export const projects = [
     tags: ["Solidity", "ERC-721", "Hardhat", "ethers", "MetaMask"],
     blurb:
       "An NFT collection and its mint site. OpenZeppelin-based ERC-721 contract with per-wallet limits and reentrancy guards, deployed to a testnet, with a React front end that talked to MetaMask.",
-  },
-  {
-    title: "▇▇▇▇▇▇▇ ▇▇",
-    year: "sealed",
-    status: "sealed",
-    sealed: true,
-    tags: ["[redacted]", "zero-knowledge", "settlement"],
-    cipher: [
-      "-----BEGIN SEALED PROJECT-----",
-      "eW91IGZvdW5kIHRoZSBzZWFtLiB0aGUgcmVzdCBpcyB1",
-      "bmRlciBuZGEgdW50aWwgdGhlIG5leHQgYmxvY2sgc2V0",
-      "dGxlcy4gaW5mb0Bqb3Jkd2FuLmNvbSDCtyBzdWJqZWN0",
-      "OiAweDAy",
-      "-----END SEALED PROJECT-----",
-    ],
-  },
-  {
-    title: "0x1f · ▇▇▇▇▇",
-    year: "sealed",
-    status: "sealed",
-    sealed: true,
-    tags: ["custody", "[redacted]", "threshold sigs"],
-    cipher: [
-      "8a34 0af0 a215 9ca5 7fef 04ee 8453 afec 1193",
-      "4539 cc7a 8a7a 71aa 83f4 3768 f09a 8659 8c0b",
-      "7df6 02a9 aba0 a3b4 5052 a2d4 e554 7829 2386",
-      "6696 d909 4b14 b40f 9f83 15df d4a4 15f1 0833",
-    ],
-  },
-  {
-    title: "Ξ∴◈ ▇▇▇▇",
-    year: "sealed",
-    status: "sealed",
-    sealed: true,
-    tags: ["consensus", "mesh", "[redacted]"],
-    cipher: [
-      "⟁⟟⟠ ⟊⟐⟑⟒ ⟓⟔⟕⟖⟗ ⟘⟙⟚ ⟛⟜⟝⟞⟟⟠⟡",
-      "⟢⟣⟤ ⟥⟦⟧⟨⟩ ⟪⟫⟬⟭ ⟮⟯⟰⟱⟲⟳ ⟴⟵⟶",
-      "⟷⟸⟹⟺ ⟻⟼⟽⟾ ⟿⤀⤁⤂⤃ ⤄⤅⤆⤇⤈⤉",
-      "key rotates at the next block.",
-    ],
   },
 ];
