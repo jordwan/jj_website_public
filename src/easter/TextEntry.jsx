@@ -1,5 +1,8 @@
 import React, { useEffect, useRef, useState } from "react";
-import { isDot, recognize } from "./recognizer";
+import { recognizeWord } from "./recognizer";
+import { svgPoint } from "./svg";
+
+const WORD_PAUSE = 1500; // ms after the pen lifts before the word is read
 
 export const isTouch = () =>
   typeof window !== "undefined" && window.matchMedia("(pointer: coarse)").matches;
@@ -9,46 +12,56 @@ export const isTouch = () =>
    Candidates let you fix a miss; space / ⌫ / ent are buttons; "abc" falls
    back to the normal keyboard. */
 export default function TextEntry({ value, onChange, onSubmit, placeholder, maxLength = 64, autoFocus }) {
-  const [useKeyboard, setUseKeyboard] = useState(() => !isTouch());
+  const touch = isTouch();
+  const [mode, setMode] = useState(() => (touch ? "pad" : "keys"));
+  const inputRef = useRef(null);
 
   const submit = (e) => {
-    e?.preventDefault?.();
-    onSubmit?.(value);
+    if (e && typeof e === "object" && "preventDefault" in e) e.preventDefault();
+    onSubmit?.(typeof e === "string" ? e : value);
   };
 
-  if (useKeyboard) {
-    return (
-      <form className="te" onSubmit={submit}>
+  // iOS only opens the keyboard for a focus() made inside the tap itself, so
+  // the input is always mounted; the pad just hides it.
+  const toKeyboard = () => {
+    inputRef.current?.focus();
+    setMode("keys");
+  };
+
+  return (
+    <div className="te-wrap">
+      <form className={`te ${mode === "pad" ? "te-off" : ""}`} onSubmit={submit} aria-hidden={mode === "pad"}>
         <input
+          ref={inputRef}
           className="eg-input"
-          autoFocus={autoFocus}
+          autoFocus={autoFocus && !touch}
           maxLength={maxLength}
           placeholder={placeholder}
           value={value}
           onChange={(e) => onChange(e.target.value)}
+          tabIndex={mode === "pad" ? -1 : 0}
         />
-        {onSubmit && (
+        {onSubmit && mode === "keys" && (
           <button type="submit" className="te-ent" disabled={!value.trim()}>
             ent
           </button>
         )}
-        {isTouch() && (
-          <button type="button" className="te-mode" onClick={() => setUseKeyboard(false)}>
-            draw
+        {touch && mode === "keys" && (
+          <button type="button" className="te-mode" onClick={() => setMode("pad")} title="draw instead">
+            ✎
           </button>
         )}
       </form>
-    );
-  }
-
-  return (
-    <GlyphPad
-      value={value}
-      onChange={(v) => onChange(v.slice(0, maxLength))}
-      onSubmit={onSubmit ? submit : undefined}
-      placeholder={placeholder}
-      onKeyboard={() => setUseKeyboard(true)}
-    />
+      {mode === "pad" && (
+        <GlyphPad
+          value={value}
+          onChange={(v) => onChange(v.slice(0, maxLength))}
+          onSubmit={onSubmit ? submit : undefined}
+          placeholder={placeholder}
+          onKeyboard={toKeyboard}
+        />
+      )}
+    </div>
   );
 }
 
@@ -56,19 +69,20 @@ function GlyphPad({ value, onChange, onSubmit, placeholder, onKeyboard }) {
   const [strokes, setStrokes] = useState([]);
   const [cands, setCands] = useState([]);
   const [flash, setFlash] = useState(false);
+  const [pending, setPending] = useState(false);
   const drawing = useRef(false);
   const box = useRef(null);
   const timer = useRef(null);
   const strokesRef = useRef(strokes);
+  const valueRef = useRef(value);
   strokesRef.current = strokes;
+  valueRef.current = value;
 
-  const pos = (e) => {
-    const r = box.current.getBoundingClientRect();
-    return { x: ((e.clientX - r.left) / r.width) * 300, y: ((e.clientY - r.top) / r.height) * 120 };
-  };
+  const pos = (e) => svgPoint(box.current, e);
   const down = (e) => {
     e.preventDefault();
     clearTimeout(timer.current);
+    setPending(false);
     drawing.current = true;
     box.current.setPointerCapture(e.pointerId);
     setStrokes((s) => [...s, [pos(e)]]);
@@ -84,25 +98,36 @@ function GlyphPad({ value, onChange, onSubmit, placeholder, onKeyboard }) {
     if (!drawing.current) return;
     drawing.current = false;
     clearTimeout(timer.current);
-    timer.current = setTimeout(finish, 650); // pause = end of character
+    setPending(true); // keep drawing: the word is read after a pause
+    timer.current = setTimeout(finish, WORD_PAUSE);
   };
 
+  /* read everything drawn so far as one word */
   const finish = () => {
     const s = strokesRef.current;
+    setPending(false);
     if (!s.length) return;
-    let next = [];
-    if (isDot(s)) {
-      onChange(value + ".");
-    } else {
-      next = recognize(s);
-      if (next[0]) onChange(value + next[0].char);
-    }
-    setCands(next);
+    const { text, last } = recognizeWord(s);
+    if (text) onChange(valueRef.current + text);
+    setCands(last);
     setFlash(true);
     setTimeout(() => {
       setStrokes([]);
       setFlash(false);
     }, 180);
+  };
+
+  /* space / ent while ink is still on the pad: read it first */
+  const flushThen = (fn) => {
+    clearTimeout(timer.current);
+    if (strokesRef.current.length) {
+      const { text, last } = recognizeWord(strokesRef.current);
+      const next = valueRef.current + text;
+      setStrokes([]);
+      setPending(false);
+      setCands(last);
+      fn(next);
+    } else fn(valueRef.current);
   };
 
   useEffect(() => () => clearTimeout(timer.current), []);
@@ -135,10 +160,13 @@ function GlyphPad({ value, onChange, onSubmit, placeholder, onKeyboard }) {
         ))}
         {!strokes.length && !value && (
           <text x="150" y="112" className="te-tip">
-            write one capital letter at a time · tap for .
+            write a word in capitals · tap for . · pause to convert
           </text>
         )}
       </svg>
+      <div className="te-wait">
+        <div className={`fill ${pending ? "run" : ""}`} style={{ transitionDuration: `${WORD_PAUSE}ms` }} />
+      </div>
       <div className="te-row">
         <div className="te-cands">
           {cands.slice(1).map((c) => (
@@ -148,17 +176,27 @@ function GlyphPad({ value, onChange, onSubmit, placeholder, onKeyboard }) {
           ))}
         </div>
         <div className="te-keys">
-          <button type="button" onClick={() => onChange(value + " ")}>
+          <button type="button" onClick={() => flushThen((v) => onChange(v + " "))}>
             space
+          </button>
+          <button type="button" className="te-mode te-kbd" onClick={onKeyboard} title="use the keyboard" aria-label="use the keyboard">
+            ⌨
           </button>
           <button type="button" onClick={() => onChange(value.slice(0, -1))}>
             ⌫
           </button>
-          <button type="button" className="te-mode" onClick={onKeyboard}>
-            abc
-          </button>
           {onSubmit && (
-            <button type="button" className="te-ent" onClick={onSubmit} disabled={!value.trim()}>
+            <button
+              type="button"
+              className="te-ent"
+              onClick={() =>
+                flushThen((v) => {
+                  onChange(v);
+                  setTimeout(() => onSubmit(v), 0);
+                })
+              }
+              disabled={!value.trim() && !strokes.length}
+            >
               ent
             </button>
           )}

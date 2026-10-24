@@ -158,3 +158,90 @@ export function isDot(strokes) {
 }
 
 export { G as GLYPH_TEMPLATES, densify };
+
+/* ── word segmentation ───────────────────────────────────────────────── */
+
+function bbox(pts) {
+  let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+  for (const p of pts) { minX = Math.min(minX, p.x); minY = Math.min(minY, p.y); maxX = Math.max(maxX, p.x); maxY = Math.max(maxY, p.y); }
+  return { minX, minY, maxX, maxY };
+}
+const union = (a, b) => ({ minX: Math.min(a.minX, b.minX), minY: Math.min(a.minY, b.minY), maxX: Math.max(a.maxX, b.maxX), maxY: Math.max(a.maxY, b.maxY) });
+
+/* A long single stroke is probably cursive: slice it into letter-sized
+   pieces at dips toward the baseline nearest to evenly spaced cut points. */
+function splitCursive(stroke, H) {
+  const b = bbox(stroke);
+  const w = b.maxX - b.minX;
+  const n = Math.min(8, Math.max(2, Math.round(w / H)));
+  const targets = Array.from({ length: n - 1 }, (_, k) => b.minX + (w * (k + 1)) / n);
+  const dips = [];
+  for (let i = 1; i < stroke.length - 1; i++) {
+    const p = stroke[i];
+    if (p.y >= stroke[i - 1].y && p.y >= stroke[i + 1].y && p.y > b.maxY - 0.4 * H) dips.push(i);
+  }
+  const cuts = [];
+  for (const t of targets) {
+    let best = -1, bd = Infinity;
+    for (const i of dips) { const d = Math.abs(stroke[i].x - t); if (d < bd && !cuts.includes(i)) { bd = d; best = i; } }
+    if (best < 0 || bd > 0.35 * H) {
+      for (let i = 1; i < stroke.length - 1; i++) { const d = Math.abs(stroke[i].x - t); if (d < bd && !cuts.includes(i)) { bd = d; best = i; } }
+    }
+    if (best > 0) cuts.push(best);
+  }
+  cuts.sort((a, c) => a - c);
+  const segs = [];
+  let start = 0;
+  for (const c of cuts) if (c - start >= 2) { segs.push(stroke.slice(start, c + 1)); start = c; }
+  segs.push(stroke.slice(start));
+  return segs.filter((s) => s.length >= 2);
+}
+
+/* strokes drawn as a word → array of stroke-groups, one per character,
+   left to right. Crossbars and dots are merged into the letter they sit on. */
+export function segment(strokes) {
+  if (!strokes.length) return [];
+  const all = bbox(strokes.flat());
+  const H = Math.max(all.maxY - all.minY, 1);
+  const items = strokes.map((s) => ({ s, b: bbox(s) })).sort((a, c) => a.b.minX - c.b.minX);
+  const groups = [];
+  for (const it of items) {
+    const g = groups[groups.length - 1];
+    const w = it.b.maxX - it.b.minX, h = it.b.maxY - it.b.minY;
+    const tiny = w < 0.15 * H && h < 0.15 * H;
+    if (g) {
+      const gw = g.b.maxX - g.b.minX;
+      const overlap = Math.min(g.b.maxX, it.b.maxX) - Math.max(g.b.minX, it.b.minX);
+      const cx = (it.b.minX + it.b.maxX) / 2;
+      const inside = cx > g.b.minX - 0.08 * H && cx < g.b.maxX + 0.08 * H;
+      const nearDot = tiny && it.b.minX - g.b.maxX < 0.2 * H;
+      const touching = overlap > -0.05 * H; // posts of H / T / E meet their bars
+      if (touching || overlap > 0.35 * Math.max(1, Math.min(gw, w)) || inside || nearDot) {
+        g.strokes.push(it.s);
+        g.b = union(g.b, it.b);
+        continue;
+      }
+    }
+    groups.push({ strokes: [it.s], b: it.b });
+  }
+  const out = [];
+  for (const g of groups) {
+    const w = g.b.maxX - g.b.minX;
+    if (g.strokes.length === 1 && w > 1.6 * H) out.push(...splitCursive(g.strokes[0], H).map((s) => [s]));
+    else out.push(g.strokes);
+  }
+  return out;
+}
+
+/* whole word → { text, last } where last = candidates for the final char */
+export function recognizeWord(strokes) {
+  const groups = segment(strokes);
+  let text = "";
+  let last = [];
+  for (const g of groups) {
+    if (isDot(g)) { text += "."; last = []; continue; }
+    const c = recognize(g);
+    if (c[0]) { text += c[0].char; last = c; }
+  }
+  return { text, last };
+}

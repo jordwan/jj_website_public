@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { hashBlock, randomHex, sha256, short } from "./hash";
 import TextEntry from "./TextEntry";
+import { svgPoint } from "./svg";
 
 /* 1 ── genesis: a single tap */
 function Genesis({ onCommit }) {
@@ -12,22 +13,32 @@ function Genesis({ onCommit }) {
 }
 
 /* 2 ── proof of work: hold to grind nonces until the hash starts with 000 */
+const MIN_HOLD = 6000; // ms of holding before a block can be found
 function ProofOfWork({ index, prevHash, onCommit }) {
   const [nonce, setNonce] = useState(0);
   const [hash, setHash] = useState("");
-  const holding = useRef(false);
+  const [held, setHeld] = useState(0);
+  const [holding, setHolding] = useState(false);
+  const holdRef = useRef(false);
+  const heldRef = useRef(0);
   const nonceRef = useRef(0);
   const finished = useRef(false);
   const data = "proof-of-work";
 
   async function grind() {
-    while (holding.current && !finished.current) {
+    let last = performance.now();
+    while (holdRef.current && !finished.current) {
+      const now = performance.now();
+      heldRef.current += now - last;
+      last = now;
+      setHeld(heldRef.current);
       let n = nonceRef.current;
       let h = "";
       for (let i = 0; i < 25; i++) {
         h = await hashBlock({ index, prevHash, data, nonce: n });
-        const target = n > 6000 ? "00" : "000";
-        if (h.startsWith(target)) {
+        const ready = heldRef.current >= MIN_HOLD;
+        const target = heldRef.current > MIN_HOLD + 4000 ? "00" : "000";
+        if (ready && h.startsWith(target)) {
           finished.current = true;
           nonceRef.current = n;
           setNonce(n);
@@ -46,26 +57,32 @@ function ProofOfWork({ index, prevHash, onCommit }) {
 
   const start = (e) => {
     e.preventDefault();
-    if (holding.current) return;
-    holding.current = true;
+    if (holdRef.current) return;
+    holdRef.current = true;
+    setHolding(true);
     grind();
   };
   const stop = () => {
-    holding.current = false;
+    holdRef.current = false;
+    setHolding(false);
   };
 
+  const pct = Math.min(100, Math.round((held / MIN_HOLD) * 100));
   return (
     <div className="eg-col">
       <button
-        className={`eg-action eg-hold ${holding.current ? "is-holding" : ""}`}
+        className={`eg-action eg-hold ${holding ? "is-holding" : ""}`}
         onPointerDown={start}
         onPointerUp={stop}
         onPointerLeave={stop}
         onPointerCancel={stop}
         onContextMenu={(e) => e.preventDefault()}
       >
-        hold to mine
+        {pct < 100 ? `hold to mine · ${pct}%` : "searching…"}
       </button>
+      <div className="eg-cap">
+        <div className="fill" style={{ width: `${pct}%` }} />
+      </div>
       <div className="eg-meta">
         <span>nonce {nonce}</span>
         <span className="eg-hash-inline">{hash || "—"}</span>
@@ -80,10 +97,7 @@ function Signature({ onCommit }) {
   const drawing = useRef(false);
   const box = useRef(null);
 
-  const pos = (e) => {
-    const r = box.current.getBoundingClientRect();
-    return { x: ((e.clientX - r.left) / r.width) * 300, y: ((e.clientY - r.top) / r.height) * 100 };
-  };
+  const pos = (e) => svgPoint(box.current, e);
   const down = (e) => {
     drawing.current = true;
     box.current.setPointerCapture(e.pointerId);
@@ -128,7 +142,7 @@ function Signature({ onCommit }) {
 /* 4 ── message: a line of text written into the chain */
 function Message({ onCommit }) {
   const [v, setV] = useState("");
-  const submit = () => v.trim() && onCommit("message", v.trim());
+  const submit = (text = v) => text.trim() && onCommit("message", text.trim());
   return (
     <div className="eg-col">
       <TextEntry value={v} onChange={setV} onSubmit={submit} autoFocus maxLength={64} placeholder="type something, press enter" />
@@ -148,37 +162,72 @@ function Peers({ onCommit }) {
     []
   );
   const [order, setOrder] = useState([]);
+  const orderRef = useRef(order);
+  orderRef.current = order;
+  const box = useRef(null);
+  const dragging = useRef(false);
+  const [cursor, setCursor] = useState(null);
 
-  const tap = (id) => {
-    if (order.includes(id)) return;
-    const next = [...order, id];
+  const connect = (id) => {
+    if (orderRef.current.includes(id)) return;
+    const next = [...orderRef.current, id];
     setOrder(next);
     if (next.length === nodes.length) {
       setTimeout(() => onCommit("peers", next.join(">")), 500);
     }
   };
 
+  const pos = (e) => svgPoint(box.current, e);
+  const hit = (p) => nodes.find((n) => Math.hypot(n.x - p.x, n.y - p.y) < 11);
+
+  // tap a node, or press and drag through nodes to link them in one motion
+  const down = (e) => {
+    e.preventDefault();
+    dragging.current = true;
+    box.current.setPointerCapture(e.pointerId);
+    const p = pos(e);
+    const n = hit(p);
+    if (n) connect(n.id);
+    setCursor(p);
+  };
+  const move = (e) => {
+    if (!dragging.current) return;
+    const p = pos(e);
+    const n = hit(p);
+    if (n) connect(n.id);
+    setCursor(p);
+  };
+  const up = () => {
+    dragging.current = false;
+    setCursor(null);
+  };
+
   const linked = order.map((id) => nodes[id]);
+  const tail = linked[linked.length - 1];
   return (
     <div className="eg-col">
-      <svg className="eg-pad eg-peers" viewBox="0 0 300 100">
+      <svg
+        ref={box}
+        className="eg-pad eg-peers"
+        viewBox="0 0 300 100"
+        onPointerDown={down}
+        onPointerMove={move}
+        onPointerUp={up}
+        onPointerCancel={up}
+      >
         {linked.slice(1).map((n, i) => (
           <line key={i} x1={linked[i].x} y1={linked[i].y} x2={n.x} y2={n.y} />
         ))}
+        {cursor && tail && order.length < nodes.length && (
+          <line className="live" x1={tail.x} y1={tail.y} x2={cursor.x} y2={cursor.y} />
+        )}
         {nodes.map((n) => (
-          <circle
-            key={n.id}
-            cx={n.x}
-            cy={n.y}
-            r={5}
-            className={order.includes(n.id) ? "on" : ""}
-            onPointerDown={() => tap(n.id)}
-          />
+          <circle key={n.id} cx={n.x} cy={n.y} r={5} className={order.includes(n.id) ? "on" : ""} />
         ))}
       </svg>
       <div className="eg-meta">
         <span>
-          {order.length} / {nodes.length} peers online
+          {order.length} / {nodes.length} peers online · tap or drag through them
         </span>
       </div>
     </div>
@@ -313,10 +362,10 @@ function Oracle({ prevHash, onCommit }) {
   const [shown, setShown] = useState("");
   const [full, setFull] = useState("");
 
-  const ask = async () => {
-    if (!q.trim()) return;
-    const h = await sha256(q.trim() + prevHash);
-    setAsked(q.trim());
+  const ask = async (text = q) => {
+    if (!text.trim()) return;
+    const h = await sha256(text.trim() + prevHash);
+    setAsked(text.trim());
     setFull(ANSWERS[parseInt(h.slice(0, 2), 16) % ANSWERS.length]);
   };
 

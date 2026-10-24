@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 import { sha256, short } from "./hash";
 import { NOTE_MAX, compressSignature, leaveRemnant, timeAgo } from "./remnants";
 import TextEntry from "./TextEntry";
+import { svgPoint } from "./svg";
 
 /* 1 ── handshake: a short glyph sequence to echo back */
 const GLYPHS = ["◆", "◇", "●", "○", "▲", "△"];
@@ -146,10 +147,7 @@ function Ghosts({ blocks, remnants, onCommit }) {
   const mine = useMemo(() => compressSignature(blocks.find((b) => b.label === "signature")?.data), [blocks]);
   const ghosts = useMemo(() => remnants.map((r) => r.sig).filter((s) => s?.length > 1).slice(0, 30), [remnants]);
 
-  const pos = (e) => {
-    const r = box.current.getBoundingClientRect();
-    return { x: ((e.clientX - r.left) / r.width) * 300, y: ((e.clientY - r.top) / r.height) * 100 };
-  };
+  const pos = (e) => svgPoint(box.current, e);
   const down = (e) => {
     drawing.current = true;
     box.current.setPointerCapture(e.pointerId);
@@ -367,7 +365,7 @@ function Merkle({ blocks, onCommit }) {
 /* 9 ── trace: leave something for the next visitor */
 function Trace({ onCommit }) {
   const [v, setV] = useState("");
-  const submit = () => onCommit("trace", v.trim() || "silence");
+  const submit = (text = v) => onCommit("trace", (typeof text === "string" ? text : v).trim() || "silence");
   return (
     <div className="eg-col">
       <TextEntry value={v} onChange={setV} onSubmit={submit} autoFocus maxLength={NOTE_MAX} placeholder={`up to ${NOTE_MAX} characters`} />
