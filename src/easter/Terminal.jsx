@@ -1,9 +1,10 @@
 import React, { useEffect, useRef, useState } from "react";
 import { sha256, short } from "./hash";
-import { TOTAL } from "./ChainExperience";
+import { TOTAL, PER_LEVEL } from "./ChainExperience";
+import { loadRemnants } from "./remnants";
 import "./Easter.css";
 
-const HELP = "help · whoami · chain · mine · hash <text> · clear · exit";
+const HELP = "help · whoami · chain · remnants · mine · hash <text> · clear · exit";
 
 export default function Terminal({ chain }) {
   const [open, setOpen] = useState(false);
@@ -49,9 +50,15 @@ export default function Terminal({ chain }) {
         const n = chain.blocks.length;
         if (!n) print("no blocks yet. try: mine");
         else {
-          print(`${n} / ${TOTAL} blocks · tip ${short(chain.blocks[n - 1].hash)}`, "accent");
-          if (n >= TOTAL) print("chain sealed.");
+          print(`${n} / ${TOTAL} blocks · level ${Math.min(2, Math.floor(n / PER_LEVEL) + 1)} · tip ${short(chain.blocks[n - 1].hash)}`, "accent");
+          if (n >= TOTAL) print("chain complete.");
         }
+        break;
+      }
+      case "remnants": {
+        const r = await loadRemnants();
+        print(`${r.count} visitor${r.count === 1 ? "" : "s"} anchored${r.online ? "" : " (local echo)"}`, "accent");
+        r.remnants.slice(0, 3).forEach((x) => print(`#${x.n} · ${x.note || "—"} · ${short(x.tip)}`));
         break;
       }
       case "mine":

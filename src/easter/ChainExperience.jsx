@@ -1,19 +1,41 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { ZERO, hashBlock, randomHex, short, sleep } from "./hash";
 import { STEPS } from "./steps";
+import { STEPS2 } from "./steps2";
+import { loadRemnants } from "./remnants";
 import "./Easter.css";
 
-export const TOTAL = STEPS.length;
+export const LEVELS = [STEPS, STEPS2];
+export const PER_LEVEL = 10;
+export const TOTAL = LEVELS.length * PER_LEVEL;
+const SAVE_KEY = "jordwan.chain";
+
+function loadSaved() {
+  try {
+    const b = JSON.parse(localStorage.getItem(SAVE_KEY) || "[]");
+    return Array.isArray(b) ? b.slice(0, TOTAL) : [];
+  } catch {
+    return [];
+  }
+}
 
 /* All chain state lives here so the terminal can read it too. */
 export function useChain() {
-  const [blocks, setBlocks] = useState([]);
+  const [blocks, setBlocks] = useState(loadSaved);
   const [mining, setMining] = useState(false);
   const [display, setDisplay] = useState("");
   const [open, setOpen] = useState(false);
   const blocksRef = useRef(blocks);
   const miningRef = useRef(false);
   blocksRef.current = blocks;
+
+  useEffect(() => {
+    try {
+      localStorage.setItem(SAVE_KEY, JSON.stringify(blocks));
+    } catch {
+      /* ignore */
+    }
+  }, [blocks]);
 
   const commit = useCallback(async (label, data, extra = {}) => {
     const cur = blocksRef.current;
@@ -38,19 +60,21 @@ export function useChain() {
     setDisplay("");
   }, []);
 
-  return { blocks, mining, display, commit, reset, open, setOpen };
+  const level = Math.min(LEVELS.length - 1, Math.floor(blocks.length / PER_LEVEL));
+  return { blocks, mining, display, commit, reset, open, setOpen, level };
 }
 
-function ChainBar({ blocks }) {
-  const n = blocks.length;
+function ChainBar({ blocks, level }) {
+  const base = level * PER_LEVEL;
+  const n = blocks.length - base;
   return (
     <div className="eg-bar">
-      {Array.from({ length: TOTAL }, (_, i) => (
+      {Array.from({ length: PER_LEVEL }, (_, i) => (
         <React.Fragment key={i}>
           {i > 0 && <span className={`eg-link ${i < n ? "on" : ""}`} />}
           <span
             className={`eg-block ${i < n ? "on" : ""} ${i === n ? "now" : ""}`}
-            title={i < n ? `block ${i} · ${short(blocks[i].hash)}` : `block ${i}`}
+            title={i < n ? `block ${base + i} · ${short(blocks[base + i].hash)}` : `block ${base + i}`}
           />
         </React.Fragment>
       ))}
@@ -58,8 +82,10 @@ function ChainBar({ blocks }) {
   );
 }
 
-function Explorer({ blocks, onReset }) {
+function Explorer({ blocks, onReset, onContinue }) {
   const [status, setStatus] = useState("");
+  const complete = blocks.length >= TOTAL;
+  const anchor = blocks.find((b) => b.label === "anchor");
 
   async function verify() {
     for (const b of blocks) {
@@ -70,7 +96,7 @@ function Explorer({ blocks, onReset }) {
         return;
       }
       setStatus(`✓ block ${b.index} ok`);
-      await sleep(90);
+      await sleep(60);
     }
     setStatus(`✓ chain valid · ${blocks.length} / ${TOTAL} blocks`);
   }
@@ -86,6 +112,7 @@ function Explorer({ blocks, onReset }) {
 
   return (
     <div className="eg-explorer">
+      {anchor && <div className="eg-status">{anchor.data}</div>}
       <div className="eg-list">
         {blocks.map((b) => (
           <div key={b.index} title={b.hash}>
@@ -98,21 +125,41 @@ function Explorer({ blocks, onReset }) {
         ))}
       </div>
       <div className="eg-actions">
+        {!complete && (
+          <button className="accent" onClick={onContinue}>
+            continue → level {Math.floor(blocks.length / PER_LEVEL) + 1}
+          </button>
+        )}
         <button onClick={verify}>verify</button>
         <button onClick={exportChain}>export</button>
         <button onClick={onReset}>reset</button>
       </div>
-      <div className="eg-status">{status}</div>
+      {!anchor && <div className="eg-status">{status}</div>}
+      {anchor && status && <div className="eg-status">{status}</div>}
     </div>
   );
 }
 
 export default function ChainExperience({ chain }) {
-  const { blocks, mining, display, commit, reset, open, setOpen } = chain;
+  const { blocks, mining, display, commit, reset, open, setOpen, level } = chain;
   const n = blocks.length;
-  const done = n >= TOTAL;
-  const step = STEPS[n];
+  const complete = n >= TOTAL;
+  const atBoundary = n > 0 && n % PER_LEVEL === 0;
+  const [resumed, setResumed] = useState(-1);
+  const showExplorer = complete || (atBoundary && resumed !== n);
+  const steps = LEVELS[level];
+  const step = steps[n % PER_LEVEL];
   const last = blocks[n - 1];
+
+  const [rem, setRem] = useState({ remnants: [], count: 0, online: false, loaded: false });
+  useEffect(() => {
+    if (!open || level < 1 || rem.loaded) return;
+    let live = true;
+    loadRemnants().then((r) => live && setRem({ ...r, loaded: true }));
+    return () => {
+      live = false;
+    };
+  }, [open, level, rem.loaded]);
 
   useEffect(() => {
     if (!open) return;
@@ -126,30 +173,51 @@ export default function ChainExperience({ chain }) {
   if (!open) return null;
 
   const Step = step?.component;
+  const title = complete
+    ? "chain complete"
+    : showExplorer
+      ? `level ${level} sealed`
+      : `L${level + 1} · block ${(n % PER_LEVEL) + 1} / ${PER_LEVEL} · ${step.name}`;
+
   return (
-    <section className="eg" aria-live="polite">
+    <section className={`eg ${level > 0 ? "l2" : ""}`} aria-live="polite">
       <div className="eg-head">
-        <span>{done ? "chain sealed" : `block ${n + 1} / ${TOTAL} · ${step.name}`}</span>
+        <span>{title}</span>
         <button className="eg-x" onClick={() => setOpen(false)}>
           esc
         </button>
       </div>
-      {!done && <p className="eg-prompt">{mining ? "mining…" : step.prompt}</p>}
+      {!showExplorer && <p className="eg-prompt">{mining ? "mining…" : step.prompt}</p>}
       <div className="eg-body">
         {mining ? (
           <div className="eg-hash">{display}</div>
-        ) : done ? (
-          <Explorer blocks={blocks} onReset={reset} />
+        ) : showExplorer ? (
+          <Explorer
+            blocks={blocks}
+            onReset={() => {
+              reset();
+              setResumed(-1);
+            }}
+            onContinue={() => setResumed(n)}
+          />
         ) : (
-          <Step key={n} index={n} prevHash={last?.hash ?? ZERO} blocks={blocks} onCommit={commit} />
+          <Step
+            key={n}
+            index={n}
+            prevHash={last?.hash ?? ZERO}
+            blocks={blocks}
+            remnants={rem.remnants}
+            online={rem.online}
+            onCommit={commit}
+          />
         )}
       </div>
-      {last && !mining && !done && (
+      {last && !mining && !showExplorer && (
         <p className="eg-last">
           ✓ block {last.index} sealed · {short(last.hash)}
         </p>
       )}
-      <ChainBar blocks={blocks} />
+      {!complete && <ChainBar blocks={blocks} level={level} />}
     </section>
   );
 }

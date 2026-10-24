@@ -322,3 +322,143 @@
   .eg { font-size: 1.05rem; padding: 12px; }
   .eg-forks { flex-direction: column; }
 }
+
+/* ── level 2 ────────────────────────────────────────── */
+.eg.l2 { border-color: rgba(216, 161, 42, 0.35); }
+.eg-actions button.accent { color: var(--eg-gold); opacity: 0.9; }
+.eg-ledger .accent { color: var(--eg-gold); }
+
+.eg-glyphs {
+  display: flex;
+  gap: 18px;
+  font-size: 2rem;
+  justify-content: center;
+  width: 100%;
+  min-height: 1.3em;
+}
+.eg-glyphs span { opacity: 0.35; transition: opacity 0.15s, text-shadow 0.15s; }
+.eg-glyphs span.lit,
+.eg-glyphs span.done { opacity: 1; color: var(--eg-gold); text-shadow: 0 0 10px rgba(216, 161, 42, 0.7); }
+.eg-glyphs.shake { animation: eg-shake 0.4s; }
+@keyframes eg-shake {
+  25% { transform: translateX(-4px); }
+  75% { transform: translateX(4px); }
+}
+.eg-keys { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
+.eg-key {
+  width: 42px;
+  height: 42px;
+  background: none;
+  border: 1px solid var(--eg-line);
+  color: inherit;
+  font: inherit;
+  font-size: 1.3rem;
+  cursor: pointer;
+}
+.eg-key:hover:not(:disabled) { border-color: var(--eg-gold); color: var(--eg-gold); }
+.eg-key:disabled { opacity: 0.35; cursor: default; }
+
+.eg-entropy {
+  position: relative;
+  height: 90px;
+  border-style: solid;
+  cursor: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+.eg-entropy .fill {
+  position: absolute;
+  inset: 0 auto 0 0;
+  background: rgba(216, 161, 42, 0.12);
+  transition: width 0.1s;
+}
+.eg-entropy span { position: relative; opacity: 0.8; }
+
+.eg-oracle.dim { color: rgba(255, 255, 255, 0.5); letter-spacing: 0.08em; }
+
+.eg-pad path.ghost {
+  stroke: rgba(255, 255, 255, 0.22);
+  stroke-width: 1.2;
+  filter: none;
+}
+.eg-pad path.ghost.mine { stroke: rgba(216, 161, 42, 0.35); }
+
+.eg-txs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.eg-tx {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  background: none;
+  border: 1px solid var(--eg-line);
+  color: inherit;
+  font: inherit;
+  font-size: 1rem;
+  padding: 8px 10px;
+  cursor: pointer;
+  transition: border-color 0.2s, color 0.2s;
+}
+.eg-tx:hover { border-color: rgba(255, 255, 255, 0.45); }
+.eg-tx.in { border-color: var(--eg-gold); color: var(--eg-gold); }
+.eg-cap { height: 3px; width: 100%; background: var(--eg-line); }
+.eg-cap .fill { height: 100%; background: var(--eg-gold); transition: width 0.2s, background 0.2s; }
+.eg-cap .fill.over { background: var(--eg-bad); }
+.eg-link-btn {
+  background: none;
+  border: none;
+  color: var(--eg-gold);
+  font: inherit;
+  cursor: pointer;
+  padding: 0;
+}
+
+.eg-echoes { display: flex; flex-direction: column; gap: 4px; max-height: 170px; overflow-y: auto; width: 100%; }
+.eg-echo {
+  display: grid;
+  grid-template-columns: 4ch 1fr 11ch 7ch;
+  gap: 10px;
+  align-items: baseline;
+  text-align: left;
+  background: none;
+  border: 1px solid transparent;
+  color: inherit;
+  font: inherit;
+  font-size: 1rem;
+  padding: 4px 6px;
+  cursor: pointer;
+  opacity: 0.7;
+  transition: opacity 0.2s, border-color 0.2s;
+}
+.eg-echo .note { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.eg-echo:hover { opacity: 1; border-color: var(--eg-line); }
+.eg-echo.in { opacity: 1; border-color: var(--eg-gold); color: var(--eg-gold); }
+
+.eg-tree { display: flex; flex-direction: column; gap: 10px; width: 100%; }
+.eg-row { display: flex; justify-content: space-around; }
+.eg-node {
+  background: none;
+  border: 1px solid var(--eg-line);
+  color: inherit;
+  font: inherit;
+  font-size: 0.85rem;
+  min-width: 52px;
+  height: 26px;
+  cursor: pointer;
+  opacity: 0.7;
+  transition: border-color 0.3s, color 0.3s, box-shadow 0.3s;
+}
+.eg-node:disabled { cursor: default; }
+.eg-node.ready { border-color: rgba(255, 255, 255, 0.45); opacity: 1; animation: eg-pulse 1.4s ease-in-out infinite; }
+.eg-node.ready:hover { border-color: var(--eg-gold); color: var(--eg-gold); }
+.eg-node.on { border-color: var(--eg-gold); color: var(--eg-gold); opacity: 1; box-shadow: 0 0 6px rgba(216, 161, 42, 0.3); }
+.eg-row:first-child .eg-node { min-width: 90px; }
+
+@media (max-width: 768px) {
+  .eg-txs { grid-template-columns: repeat(2, 1fr); }
+  .eg-echo { grid-template-columns: 4ch 1fr 11ch; }
+  .eg-echo span:last-child { display: none; }
+  .eg-node { min-width: 34px; font-size: 0.7rem; }
+  .eg-row:first-child .eg-node { min-width: 70px; }
+}
