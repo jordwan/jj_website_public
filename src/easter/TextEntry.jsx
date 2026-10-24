@@ -68,6 +68,7 @@ export default function TextEntry({ value, onChange, onSubmit, placeholder, maxL
 function InkPad({ value, onChange, onSubmit, placeholder, onKeyboard }) {
   const [strokes, setStrokes] = useState([]);
   const [pending, setPending] = useState(false);
+  const [reading, setReading] = useState(false);
   const [display, setDisplay] = useState(value);
   const drawing = useRef(false);
   const box = useRef(null);
@@ -106,16 +107,26 @@ function InkPad({ value, onChange, onSubmit, placeholder, onKeyboard }) {
     const data = s.map((st) => st.map((p) => `${p.x | 0},${p.y | 0}`).join(";")).join("|");
     return (await sha256(data)).slice(0, HASH_LEN);
   };
+  /* looks like it's reading the handwriting, then commits to a hash */
+  const LETTERS = "abcdefghijklmnopqrstuvwxyz";
+  const guess = (n) => Array.from({ length: n }, () => LETTERS[(Math.random() * 26) | 0]).join("");
   const hashInk = async () => {
     setPending(false);
     const h = await inkHash();
     if (!h) return;
+    setReading(true);
+    const n = Math.max(3, Math.min(HASH_LEN, Math.round(strokesRef.current.length * 1.4)));
+    for (let i = 0; i < 12; i++) {
+      setDisplay(guess(n));
+      await new Promise((r) => setTimeout(r, 55));
+    }
     for (let i = 0; i <= HASH_LEN; i += 2) {
-      setDisplay(h.slice(0, i) + randomHex(HASH_LEN - i));
-      await new Promise((r) => setTimeout(r, 30));
+      setDisplay(h.slice(0, i) + guess(HASH_LEN - i));
+      await new Promise((r) => setTimeout(r, 40));
     }
     setDisplay(h);
     onChange(h);
+    setReading(false);
   };
 
   /* ent while ink is still pending: hash it first */
@@ -147,7 +158,7 @@ function InkPad({ value, onChange, onSubmit, placeholder, onKeyboard }) {
       </div>
       <svg
         ref={box}
-        className={`eg-pad te-canvas ${pending ? "pending" : ""}`}
+        className={`eg-pad te-canvas ${pending ? "pending" : ""} ${reading ? "reading" : ""}`}
         viewBox="0 0 300 120"
         onPointerDown={down}
         onPointerMove={move}
@@ -157,6 +168,7 @@ function InkPad({ value, onChange, onSubmit, placeholder, onKeyboard }) {
         {strokes.map((s, i) => (
           <path key={i} d={path(s)} />
         ))}
+        {reading && <line className="scan" x1="0" y1="0" x2="0" y2="120" />}
         {!strokes.length && !value && (
           <text x="150" y="112" className="te-tip">
             draw anything · your ink becomes a hash
@@ -168,7 +180,7 @@ function InkPad({ value, onChange, onSubmit, placeholder, onKeyboard }) {
       </div>
       <div className="te-row">
         <div className="eg-meta">
-          <span>{pending ? "hashing…" : strokes.length ? "keep drawing or press ent" : ""}</span>
+          <span>{reading ? "reading ink…" : pending ? "…" : strokes.length ? "keep drawing or press ent" : ""}</span>
         </div>
         <div className="te-keys">
           <button type="button" className="te-mode te-kbd" onClick={onKeyboard} title="use the keyboard" aria-label="use the keyboard">

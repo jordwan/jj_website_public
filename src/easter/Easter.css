@@ -564,3 +564,16 @@
 }
 .eg-options button:hover { border-color: var(--eg-gold); color: var(--eg-gold); opacity: 1; }
 .eg-or { display: flex; justify-content: space-between; align-items: center; font-size: 0.95rem; opacity: 0.5; margin: 2px 0; }
+
+.te-canvas.reading { border-color: var(--eg-gold); }
+.te-canvas.reading path { stroke: rgba(255, 255, 255, 0.85); filter: drop-shadow(0 0 4px rgba(255, 255, 255, 0.6)); }
+.te-canvas .scan {
+  stroke: var(--eg-gold);
+  stroke-width: 1.5;
+  filter: drop-shadow(0 0 6px rgba(216, 161, 42, 0.9));
+  animation: te-scan 0.65s linear 2;
+}
+@keyframes te-scan {
+  from { transform: translateX(0); }
+  to { transform: translateX(300px); }
+}
