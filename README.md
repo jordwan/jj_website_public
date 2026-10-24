@@ -1,11 +1,10 @@
 # Jordwan.com
 
-Couple things to know.
+Personal site: animated background, title, nav bar. Built with React + Vite.
 
 ```shell
-npx hardhat help
-npx hardhat test
-REPORT_GAS=true npx hardhat test
-npx hardhat node
-npx hardhat run scripts/deploy.js
+npm install
+npm run dev      # local dev server
+npm run build    # production build to dist/
+npm run preview  # preview the production build
 ```

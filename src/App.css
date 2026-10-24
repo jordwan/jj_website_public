@@ -1,18 +1,19 @@
 @import url("https://fonts.googleapis.com/css?family=Press+Start+2P");
 @import url("https://fonts.googleapis.com/css?family=VT323");
 
-.App {
-  text-align: center;
-  font-family: "Press Start 2P", "VT323";
-  color: white;
-}
-
 * {
   box-sizing: border-box;
 }
 
 body {
   overflow: hidden;
+  background: #000;
+}
+
+.app {
+  text-align: center;
+  font-family: "Press Start 2P", "VT323", monospace;
+  color: white;
 }
 
 .overlay {
@@ -27,21 +28,41 @@ body {
 
 .moving-background {
   z-index: -1;
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background-image: url("./assets/background/parallax-bg.gif");
   background-size: cover;
   background-repeat: no-repeat;
   background-attachment: fixed;
   background-position: 40% 40%;
 }
 
-/* CSS File */
-/* For screens smaller than or equal to 768px (mobile devices) */
+.hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: calc(100% - 70px);
+  padding: 0 16px;
+}
+
+.hero-title {
+  font-size: 2.2rem;
+  margin: 0 0 16px;
+  text-shadow: 0 0 8px rgba(255, 255, 255, 0.6);
+}
+
+.hero-sub {
+  font-family: "VT323", monospace;
+  font-size: 1.8rem;
+  margin: 0;
+  letter-spacing: 0.1em;
+}
+
 @media (max-width: 768px) {
-  /* Add hamburger menu styles */
-  /* You can hide or show the hamburger menu icon and handle its functionality */
+  .hero-title {
+    font-size: 1.3rem;
+  }
 }
