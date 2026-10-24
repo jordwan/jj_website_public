@@ -21,7 +21,7 @@ function Genesis({ onCommit }) {
 }
 
 /* 2 ── proof of work: hold to grind nonces until the hash starts with 000 */
-const MIN_HOLD = 6000; // ms of holding before a block can be found
+const MIN_HOLD = 3000; // ms of holding before a block can be found (~4s total)
 function ProofOfWork({ index, prevHash, onCommit }) {
   const [nonce, setNonce] = useState(0);
   const [hash, setHash] = useState("");
@@ -45,7 +45,7 @@ function ProofOfWork({ index, prevHash, onCommit }) {
       for (let i = 0; i < 25; i++) {
         h = await hashBlock({ index, prevHash, data, nonce: n });
         const ready = heldRef.current >= MIN_HOLD;
-        const target = heldRef.current > MIN_HOLD + 4000 ? "00" : "000";
+        const target = heldRef.current > MIN_HOLD + 1500 ? "00" : "000";
         if (ready && h.startsWith(target)) {
           finished.current = true;
           nonceRef.current = n;
