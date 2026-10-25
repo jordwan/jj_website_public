@@ -16,6 +16,16 @@ npm run build    # production build to dist/
 npm run preview  # preview the production build
 ```
 
+## Background
+
+The animated city is `public/bg/bg.mp4` (1280×770, H.264, 528 frames at
+30 fps, 17.6 s loop), re-encoded from the original 85 MB GIF with no change
+to length or frame rate. Phones get `bg-mobile.mp4` (854 wide). The
+component in `src/Background.jsx` autoplays muted inline, retries on the
+first touch if the browser refuses autoplay (iOS Low Power Mode), and
+drifts the poster frame slowly until the video is actually playing so the
+page is never still.
+
 ## Easter eggs
 
 - Click the title or the email to open a hidden two-level, 20-block mini

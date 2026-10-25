@@ -6,7 +6,7 @@ import { Router, useRoute } from "./router";
 import About from "./pages/About";
 import Portfolio from "./pages/Portfolio";
 import Archive from "./pages/Archive";
-import bgGif from "./assets/background/parallax-bg.gif";
+import Background from "./Background";
 import "./App.css";
 
 function Home({ chain }) {
@@ -40,10 +40,7 @@ function App() {
   return (
     <Router>
       <div className="app">
-        <div
-          className="moving-background"
-          style={{ backgroundImage: `url(${bgGif})` }}
-        />
+        <Background />
         <div className="overlay">
           <NavBar chain={chain} />
           <Routes chain={chain} />

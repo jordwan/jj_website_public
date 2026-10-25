@@ -29,14 +29,34 @@ body {
 .moving-background {
   z-index: -1;
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-size: cover;
-  background-repeat: no-repeat;
-  background-attachment: fixed;
-  background-position: 40% 40%;
+  inset: 0;
+  overflow: hidden;
+  background: #000;
+}
+.bg-video,
+.bg-poster {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 40% 40%;
+}
+/* the video sits on top once it's actually playing; until then the poster
+   drifts slowly so the page is never still */
+.bg-video { opacity: 0; transition: opacity 0.6s ease; }
+.is-playing .bg-video { opacity: 1; }
+.bg-poster {
+  transform-origin: 40% 40%;
+  animation: bg-drift 24s ease-in-out infinite alternate;
+}
+.is-playing .bg-poster { animation-play-state: paused; }
+@keyframes bg-drift {
+  from { transform: scale(1.04) translate(-1.2%, -0.6%); }
+  to { transform: scale(1.1) translate(1.2%, 0.8%); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .bg-poster { animation: none; }
 }
 
 .hero {
